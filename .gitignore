@@ -1,0 +1,24 @@
+# Downloaded upstream source trees
+linux-5.15/
+u-boot-2022.04/
+busybox-1.35.0/
+
+# Downloaded source archives
+*.tar
+*.tar.gz
+*.tar.xz
+*.tar.bz2
+
+# Intermediate build files
+*.o
+*.cmd
+*.mod
+*.mod.c
+*.mod.o
+Module.symvers
+modules.order
+
+# Temporary editor files
+*~
+*.swp
+*.tmp
