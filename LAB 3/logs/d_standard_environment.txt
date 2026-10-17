@@ -1,0 +1,9 @@
+2026-10-17T18:05:41+07:00
+Linux localhost.localdomain 5.14.0-687.44.1.el9_8.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 9 11:11:28 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+Test: baseline without QEMU
+Threads: 4
+Priority: 80
+Policy: SCHED_FIFO
+Interval: 1000 us
+Loops: 10000
+Histogram limit: 5000 us

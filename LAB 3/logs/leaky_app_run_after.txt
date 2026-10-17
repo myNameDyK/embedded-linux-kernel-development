@@ -1,0 +1,10 @@
+=== LAB03 MEMORY LEAK TEST ===
+[1] Creating records...
+[2] Deleting records...
+[3] Processing messages...
+Processed: Message #0: data payload here
+Processed: Message #10: data payload here
+Processed: Message #20: data payload here
+Processed: Message #30: data payload here
+Processed: Message #40: data payload here
+Program finished.

@@ -1,0 +1,18 @@
+# started on Sat Oct 17 17:46:24 2026
+
+
+ Performance counter stats for '/home/nguyenky/embedded_lab3/apps/perf_target_profile':
+
+          1,979.45 msec task-clock:u                     #    0.999 CPUs utilized             
+     4,841,444,106      cycles:u                         #    2.446 GHz                       
+    21,608,569,672      instructions:u                   #    4.46  insn per cycle            
+           488,237      cache-misses:u                                                        
+     3,001,788,192      branches:u                       #    1.516 G/sec                     
+            13,534      branch-misses:u                  #    0.00% of all branches           
+
+       1.980603788 seconds time elapsed
+
+       1.979287000 seconds user
+       0.001000000 seconds sys
+
+

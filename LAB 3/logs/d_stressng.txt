@@ -1,0 +1,18 @@
+stress-ng: info:  [35416] setting to a 25 secs run per stressor
+stress-ng: info:  [35416] dispatching hogs: 16 cpu, 4 io, 2 vm
+stress-ng: warn:  [35416] WARNING! using HPET clocksource (refer to /sys/devices/system/clocksource/clocksource0), this may impact benchmarking performance
+stress-ng: info:  [35416] note: /proc/sys/kernel/sched_autogroup_enabled is 1 and this can impact scheduling throughput for processes not attached to a tty. Setting this to 0 may improve performance metrics
+stress-ng: info:  [35416] note: 32 cpus have scaling governors set to powersave and this may impact performance; setting /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor to 'performance' may improve performance
+stress-ng: info:  [35533] io: this is a legacy I/O sync stressor, consider using iomix instead
+stress-ng: info:  [35538] vm: using 64M per stressor instance (total 128M of 2.18G available memory)
+stress-ng: info:  [35416] stopping 22 stressors
+stress-ng: metrc: [35416] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
+stress-ng: metrc: [35416]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: metrc: [35416] cpu              211086     12.04    192.57      0.01     17529.82        1096.05
+stress-ng: metrc: [35416] io               183756     12.04      2.78     33.72     15262.30        5033.43
+stress-ng: metrc: [35416] vm               732147     12.04     23.08      1.00     60811.82       30407.30
+stress-ng: info:  [35416] skipped: 0
+stress-ng: info:  [35416] passed: 22: cpu (16) io (4) vm (2)
+stress-ng: info:  [35416] failed: 0
+stress-ng: info:  [35416] metrics untrustworthy: 0
+stress-ng: info:  [35416] successful run completed in 12.05 secs

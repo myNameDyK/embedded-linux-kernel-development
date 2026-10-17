@@ -1,0 +1,3 @@
+fopen: Permission denied
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.027 MB /home/nguyenky/embedded_lab3/logs/perf.data (18 samples) ]

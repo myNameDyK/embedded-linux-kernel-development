@@ -1,0 +1,113 @@
+Remote debugging using 127.0.0.1:1234
+0x00010420 in _start ()
+Breakpoint 1 at 0x106b8: file buggy_app.c, line 67.
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep y   0x000106b8 in main at buggy_app.c:67
+Breakpoint 2 at 0x10578: file buggy_app.c, line 18.
+Continuing.
+
+Breakpoint 1, main () at buggy_app.c:67
+67	    printf("=== LAB03 BUGGY APP ===\n");
+Continuing.
+
+Breakpoint 2, process_data (data=0x7efffd10, len=5) at buggy_app.c:18
+18	    int sum = 0;
+data = 0x7efffd10
+len = 5
+$1 = 5
+$2 = {10, 20, 30, 40, 50}
+#0  process_data (data=0x7efffd10, len=5) at buggy_app.c:18
+#1  0x0001071c in main () at buggy_app.c:73
+13	 */
+14	
+15	/* BUG 1: Loop executes one iteration too many. */
+16	void process_data(int *data, int len)
+17	{
+18	    int sum = 0;
+19	
+20	    for (int i = 0; i <= len; i++) {
+21	        /*
+22	         * BUG: Valid indices are 0 to len-1.
+Breakpoint 3 at 0x1058c: file buggy_app.c, line 25.
+Continuing.
+
+Breakpoint 3, process_data (data=0x7efffd10, len=5) at buggy_app.c:25
+25	        sum += data[i];
+$3 = 5
+$4 = 5
+$5 = 0
+$6 = 1
+i = 5
+sum = 150
+#0  process_data (data=0x7efffd10, len=5) at buggy_app.c:25
+#1  0x0001071c in main () at buggy_app.c:73
+pc             0x1058c             0x1058c <process_data+40>
+sp             0x7efffcf8          0x7efffcf8
+lr             0x1071c             67356
+$7 = {10, 20, 30, 40, 50}
+Breakpoint 4 at 0x1063c: file buggy_app.c, line 41.
+Breakpoint 5 at 0x10644: file buggy_app.c, line 47.
+Continuing.
+
+Breakpoint 4, create_message (text=0x6ee18 "Hello Embedded Linux") at buggy_app.c:41
+41	    free(buf);
+$8 = 0x8dda8 "Hello Embedded Linux"
+0x8dda8:	"Hello Embedded Linux"
+#0  create_message (text=0x6ee18 "Hello Embedded Linux") at buggy_app.c:41
+#1  0x0001073c in main () at buggy_app.c:77
+35	
+36	    if (buf == NULL)
+37	        return NULL;
+38	
+39	    strcpy(buf, text);
+40	
+41	    free(buf);
+42	
+43	    /*
+44	     * BUG: buf no longer points to valid
+45	     * allocated memory after free().
+46	     */
+47	    return buf;
+48	}
+Continuing.
+
+Breakpoint 5, create_message (text=0x6ee18 "Hello Embedded Linux") at buggy_app.c:47
+47	    return buf;
+$9 = 0x8dda8 "\215"
+buf = 0x8dda8 "\215"
+#0  create_message (text=0x6ee18 "Hello Embedded Linux") at buggy_app.c:47
+#1  0x0001073c in main () at buggy_app.c:77
+pc             0x10644             0x10644 <create_message+88>
+sp             0x7efffcf8          0x7efffcf8
+lr             0x2c1fc             180732
+Breakpoint 6 at 0x10668: file buggy_app.c, line 57.
+Continuing.
+
+Breakpoint 6, calculate (a=100000, b=100000) at buggy_app.c:57
+57	    int result = a * b;
+a = 100000
+b = 100000
+$10 = 100000
+$11 = 100000
+$12 = 10000000000
+$13 = 4
+$14 = 2147483647
+59	    printf("calculate(%d, %d) = %d\n",
+$15 = 1410065408
+#0  calculate (a=100000, b=100000) at buggy_app.c:59
+#1  0x0001077c in main () at buggy_app.c:87
+pc             0x10678             0x10678 <calculate+36>
+sp             0x7efffcf8          0x7efffcf8
+lr             0x1077c             67452
+54	     * BUG: 100000 * 100000 exceeds INT_MAX.
+55	     * Signed integer overflow is undefined behavior.
+56	     */
+57	    int result = a * b;
+58	
+59	    printf("calculate(%d, %d) = %d\n",
+60	           a, b, result);
+61	
+62	    return result;
+63	}
+Continuing.
+[Inferior 1 (process 71) exited normally]

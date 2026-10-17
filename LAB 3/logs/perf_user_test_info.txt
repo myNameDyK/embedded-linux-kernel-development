@@ -1,0 +1,2 @@
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.003 MB /home/nguyenky/embedded_lab3/logs/perf_user_test.data (6 samples) ]
