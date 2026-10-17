@@ -29,7 +29,7 @@ Hai bài thực hành nối tiếp nhau: **LAB-01 xây dựng hệ thống Linux
 
 LAB-01 xây dựng các thành phần nền tảng: kernel `zImage`, Device Tree `vexpress-v2p-ca9.dtb`, BusyBox và root filesystem đóng gói thành `initramfs.cpio.gz`.
 
-**Sơ đồ:** [Mở sơ đồ chuỗi khởi động Embedded Linux (PDF)](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf)
+**Sơ đồ:** [Mở sơ đồ chuỗi khởi động Embedded Linux (PDF)](Lab2_Character_Driver.drawio.pdf)
 
 Nội dung chính:
 
