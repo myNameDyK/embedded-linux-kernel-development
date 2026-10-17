@@ -29,9 +29,8 @@ Hai bài thực hành nối tiếp nhau: **LAB-01 xây dựng hệ thống Linux
 
 LAB-01 xây dựng các thành phần nền tảng: kernel `zImage`, Device Tree `vexpress-v2p-ca9.dtb`, BusyBox và root filesystem đóng gói thành `initramfs.cpio.gz`.
 
-![Sơ đồ chuỗi khởi động Embedded Linux](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.png)
+![Sơ đồ chuỗi khởi động Embedded Linux](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf)
 
-*Xem bản [PDF của sơ đồ khởi động](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf) để phóng to.*
 
 Nội dung chính:
 
@@ -47,9 +46,8 @@ Nội dung chính:
 
 LAB-02 tiếp tục dùng kernel 5.15.0 từ LAB-01. Module `lab2_driver.ko` cung cấp character device `/dev/lab2`, nhận dữ liệu từ user space và trả lại dữ liệu qua các hàm trong bảng `file_operations`.
 
-![Sơ đồ kiến trúc character device driver LAB-02](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.png)
+![Sơ đồ kiến trúc character device driver LAB-02](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf)
 
-*Xem bản [PDF của sơ đồ driver](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf) để phóng to.*
 
 | Phần | Nội dung | Kết quả được trình bày trong báo cáo |
 | --- | --- | --- |
