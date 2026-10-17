@@ -29,8 +29,7 @@ Hai bài thực hành nối tiếp nhau: **LAB-01 xây dựng hệ thống Linux
 
 LAB-01 xây dựng các thành phần nền tảng: kernel `zImage`, Device Tree `vexpress-v2p-ca9.dtb`, BusyBox và root filesystem đóng gói thành `initramfs.cpio.gz`.
 
-![Sơ đồ chuỗi khởi động Embedded Linux](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf)
-
+**Sơ đồ:** [Mở sơ đồ chuỗi khởi động Embedded Linux (PDF)](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf)
 
 Nội dung chính:
 
@@ -46,8 +45,7 @@ Nội dung chính:
 
 LAB-02 tiếp tục dùng kernel 5.15.0 từ LAB-01. Module `lab2_driver.ko` cung cấp character device `/dev/lab2`, nhận dữ liệu từ user space và trả lại dữ liệu qua các hàm trong bảng `file_operations`.
 
-![Sơ đồ kiến trúc character device driver LAB-02](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf)
-
+**Sơ đồ:** [Mở sơ đồ kiến trúc character device driver (PDF)](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf)
 
 | Phần | Nội dung | Kết quả được trình bày trong báo cáo |
 | --- | --- | --- |
@@ -75,7 +73,7 @@ LAB-02 tiếp tục dùng kernel 5.15.0 từ LAB-01. Module `lab2_driver.ko` cun
 
 | Đường dẫn | Nội dung |
 | --- | --- |
-| [SE200778_PhamVoHoangNhan_Lab01/](SE200778_PhamVoHoangNhan_Lab01/) | Báo cáo LAB-01 và thư mục `diagrams/` chứa sơ đồ PDF, ảnh PNG |
-| [SE200778_PhamVoHoangNhan_Lab02/](SE200778_PhamVoHoangNhan_Lab02/) | Báo cáo LAB-02 và thư mục `diagrams/` chứa sơ đồ PDF, ảnh PNG |
+| [SE200778_PhamVoHoangNhan_Lab01/](SE200778_PhamVoHoangNhan_Lab01/) | Báo cáo LAB-01 và thư mục `diagrams/` chứa sơ đồ `.drawio.pdf` |
+| [SE200778_PhamVoHoangNhan_Lab02/](SE200778_PhamVoHoangNhan_Lab02/) | Báo cáo LAB-02 và thư mục `diagrams/` chứa sơ đồ `.drawio.pdf` |
 
 Các bài thực hành đã có trong repository: [Nguyễn Duy Khoa — LAB-01](SE200494_NguyenDuyKhoa_Lab01/), [LAB-02](SE200494_NguyenDuyKhoa_Lab02/), [Assignment 01](SE200494_NguyenDuyKhoa_Asgn01/).
