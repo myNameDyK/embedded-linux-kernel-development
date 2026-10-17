@@ -1,0 +1,82 @@
+Script started on 2026-10-17 18:03:53+07:00 [COMMAND=" set -e  echo "===== MTD_JFFS2_START ====="  echo "===== DEVICE CHECK =====" cat /proc/mtd echo "Target: /dev/mtd1" mtdinfo /dev/mtd1  echo "===== ERASE NAND SIMULATOR =====" sudo flash_erase /dev/mtd1 0 0  echo "===== CREATE SOURCE FILES =====" rm -rf /tmp/jffs2_data mkdir -p /tmp/jffs2_data/logs echo "Hello from JFFS2!" > /tmp/jffs2_data/hello.txt echo "Embedded Linux Lab2" > /tmp/jffs2_data/info.txt date > /tmp/jffs2_data/logs/boot.log find /tmp/jffs2_data -type f -print  echo "===== BUILD JFFS2 IMAGE =====" sudo mkfs.jffs2 \   --root=/tmp/jffs2_data \   --eraseblock=0x4000 \   --output=/tmp/rootfs.jffs2 \   --pad \   --no-cleanmarkers  ls -lh /tmp/rootfs.jffs2  echo "===== WRITE IMAGE =====" sudo nandwrite -p /dev/mtd1 /tmp/rootfs.jffs2  echo "===== MOUNT JFFS2 =====" sudo mkdir -p /mnt/jffs2 sudo umount /mnt/jffs2 2>/dev/null || true sudo mount -t jffs2 /dev/mtdblock1 /mnt/jffs2  echo "===== INITIAL CONTENT =====" ls -la /mnt/jffs2 cat /mnt/jffs2/hello.txt cat /mnt/jffs2/info.txt cat /mnt/jffs2/logs/boot.log  echo "===== WRITE RUNTIME DATA =====" sudo sh -c 'echo "Written at $(date)" >> /mnt/jffs2/logs/boot.log' sudo sh -c 'echo "New runtime file" > /mnt/jffs2/runtime.txt' cat /mnt/jffs2/logs/boot.log cat /mnt/jffs2/runtime.txt  echo "===== PERSISTENCE TEST =====" sync sudo umount /mnt/jffs2 sudo mount -t jffs2 /dev/mtdblock1 /mnt/jffs2  echo "After remount:" cat /mnt/jffs2/logs/boot.log cat /mnt/jffs2/runtime.txt  echo "===== RAW NAND DUMP =====" sudo nanddump -o -l 512 -f /tmp/dump.bin /dev/mtd1 hexdump -C /tmp/dump.bin | head -20  echo "===== UNMOUNT =====" sudo umount /mnt/jffs2  echo "===== MTD_JFFS2_TEST_SUCCESS =====" echo "===== MTD_JFFS2_END =====" " TERM="xterm-kitty" TTY="/dev/pts/3" COLUMNS="177" LINES="38"]
+===== MTD_JFFS2_START =====
+===== DEVICE CHECK =====
+dev:    size   erasesize  name
+mtd0: 02000000 00001000 "BIOS"
+mtd1: 02000000 00004000 "NAND simulator partition 0"
+Target: /dev/mtd1
+mtd1
+Name:                           NAND simulator partition 0
+Type:                           nand
+Eraseblock size:                16384 bytes, 16.0 KiB
+Amount of eraseblocks:          2048 (33554432 bytes, 32.0 MiB)
+Minimum input/output unit size: 512 bytes
+Sub-page size:                  256 bytes
+OOB size:                       16 bytes
+Character device major/minor:   90:2
+Bad blocks are allowed:         true
+Device is writable:             true
+
+===== ERASE NAND SIMULATOR =====
+[sudo: authenticate] Password: ******      
+Erasing 32768 Kibyte @ 0 --  0 % complete Erasing 32768 Kibyte @ 0 -- 100 % complete 
+===== CREATE SOURCE FILES =====
+/tmp/jffs2_data/info.txt
+/tmp/jffs2_data/hello.txt
+/tmp/jffs2_data/logs/boot.log
+===== BUILD JFFS2 IMAGE =====
+-rw-r--r-- 1 root root 16K Oct 17 18:03 /tmp/rootfs.jffs2
+===== WRITE IMAGE =====
+Writing data to block 0 at offset 0x0
+Written 30 blocks containing only 0xff bytes
+Those block may be incorrectly treated as empty!
+===== MOUNT JFFS2 =====
+===== INITIAL CONTENT =====
+total 4
+drwxr-xr-x 4 root root    0 Jan  1  1970 .
+drwxr-xr-x 3 root root 4096 Sep 28 20:56 ..
+-rw-rw-r-- 1 dyk  dyk    18 Oct 17 18:03 hello.txt
+-rw-rw-r-- 1 dyk  dyk    20 Oct 17 18:03 info.txt
+drwxrwxr-x 2 dyk  dyk     0 Oct 17 18:03 logs
+Hello from JFFS2!
+Embedded Linux Lab2
+Sat Oct 17 06:03:56 PM +07 2026
+===== WRITE RUNTIME DATA =====
+Sat Oct 17 06:03:56 PM +07 2026
+Written at Sat Oct 17 06:03:56 PM +07 2026
+New runtime file
+===== PERSISTENCE TEST =====
+After remount:
+Sat Oct 17 06:03:56 PM +07 2026
+Written at Sat Oct 17 06:03:56 PM +07 2026
+New runtime file
+===== RAW NAND DUMP =====
+ECC failed: 0
+ECC corrected: 0
+Number of bad blocks: 0
+Number of bbt blocks: 0
+Block size 16384, page size 512, OOB size 16
+Dumping data starting at 0x00000000 and ending at 0x00000200...
+00000000  85 19 01 e0 31 00 00 00  1d d9 82 42 01 00 00 00  |....1......B....|
+00000010  00 00 00 00 02 00 00 00  1c 56 d3 6a 09 08 00 00  |.........V.j....|
+00000020  6f 42 7e d6 15 da 69 f4  68 65 6c 6c 6f 2e 74 78  |oB~...i.hello.tx|
+00000030  74 ff ff ff 85 19 02 e0  56 00 00 00 09 64 e7 62  |t.......V....d.b|
+00000040  02 00 00 00 01 00 00 00  b4 81 00 00 e8 03 e8 03  |................|
+00000050  12 00 00 00 1c 56 d3 6a  1c 56 d3 6a 1c 56 d3 6a  |.....V.j.V.j.V.j|
+00000060  00 00 00 00 12 00 00 00  12 00 00 00 00 00 00 00  |................|
+00000070  ee dd 4b b3 ee 7f 3b 95  48 65 6c 6c 6f 20 66 72  |..K...;.Hello fr|
+00000080  6f 6d 20 4a 46 46 53 32  21 0a ff ff 85 19 01 e0  |om JFFS2!.......|
+00000090  30 00 00 00 78 be 3e fa  01 00 00 00 01 00 00 00  |0...x.>.........|
+000000a0  03 00 00 00 1c 56 d3 6a  08 08 00 00 f4 f8 0f 5b  |.....V.j.......[|
+000000b0  a9 de 79 72 69 6e 66 6f  2e 74 78 74 85 19 02 e0  |..yrinfo.txt....|
+000000c0  58 00 00 00 3a 13 38 82  03 00 00 00 01 00 00 00  |X...:.8.........|
+000000d0  b4 81 00 00 e8 03 e8 03  14 00 00 00 1c 56 d3 6a  |.............V.j|
+000000e0  1c 56 d3 6a 1c 56 d3 6a  00 00 00 00 14 00 00 00  |.V.j.V.j........|
+000000f0  14 00 00 00 00 00 00 00  8a 74 43 dd 6a 28 97 c8  |.........tC.j(..|
+00000100  45 6d 62 65 64 64 65 64  20 4c 69 6e 75 78 20 4c  |Embedded Linux L|
+00000110  61 62 32 0a 85 19 01 e0  2c 00 00 00 5f 56 f1 e0  |ab2.....,..._V..|
+00000120  01 00 00 00 02 00 00 00  04 00 00 00 1c 56 d3 6a  |.............V.j|
+00000130  04 04 00 00 55 e3 93 45  40 19 cb d1 6c 6f 67 73  |....U..E@...logs|
+===== UNMOUNT =====
+===== MTD_JFFS2_TEST_SUCCESS =====
+===== MTD_JFFS2_END =====

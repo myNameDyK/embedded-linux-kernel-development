@@ -1,0 +1,106 @@
+/ # echo "===== ASGN1_LOG_START ====="
+===== ASGN1_LOG_START =====
+/ # test_asgn1.sh
+===== ASSIGNMENT 01 - TASK 1 TEST =====
+asgn1_driver: loading out-of-tree module taints kernel.
+asgn1_driver: initializing module
+asgn1_driver: loaded, major=241
+asgn1_driver: /proc/asgn1_info created
+[1] GET_VERSION
+asgn1_driver: device opened (count=1)
+asgn1: GET_VERSION called
+VERSION: version v1 SE200494
+asgn1_driver: device closed
+[2] ECHO MODE
+asgn1_driver: device opened (count=2)
+asgn1: SET_MODE called
+ SET MODE: done
+asgn1_driver: device closed
+asgn1_driver: device opened (count=3)
+asgn1_driver: received 17 bytes: [hello-normal mode]
+asgn1_driver: device closed
+asgn1_driver: device opened (count=4)
+asgn1_driver: sent 17 bytes to user
+asgn1_driver: device closed
+read = hello-normal mode
+[3] KERNEL MODE
+asgn1_driver: device opened (count=5)
+asgn1: SET_MODE called
+ SET MODE: done
+asgn1_driver: device closed
+asgn1_driver: device opened (count=6)
+asgn1_driver: received 12 bytes: [[KERNEL] hello-kernel]
+asgn1_driver: device closed
+asgn1_driver: device opened (count=7)
+asgn1_driver: sent 21 bytes to user
+asgn1_driver: device closed
+read = [[KERNEL] hello-kernel]
+[4] GET_STATS
+asgn1_driver: device opened (count=8)
+asgn1: GET_STATS called
+ OPEN COUNT:        8
+ WRITE COUNT:       2
+ READ COUNT:        2
+ BUFFER LEN:        21
+ LAST WRITE SIZE:   12
+ GET_STATS: done
+asgn1_driver: device closed
+[5] RESET_BUFFER
+asgn1_driver: device opened (count=9)
+asgn1: RESET_BUFFER called
+ RESET: done
+asgn1_driver: device closed
+asgn1_driver: device opened (count=10)
+asgn1_driver: device closed
+after reset = []
+asgn1_driver: device opened (count=11)
+asgn1: GET_STATS called
+ OPEN COUNT:        11
+ WRITE COUNT:       0
+ READ COUNT:        0
+ BUFFER LEN:        0
+ LAST WRITE SIZE:   12
+ GET_STATS: done
+asgn1_driver: device closed
+[6] UNLOAD MODULE
+asgn1_driver: module unloaded
+[7] DMESG
+asgn1_driver: loading out-of-tree module taints kernel.
+asgn1_driver: initializing module
+asgn1_driver: loaded, major=241
+asgn1_driver: /proc/asgn1_info created
+asgn1_driver: device opened (count=1)
+asgn1: GET_VERSION called
+asgn1_driver: device closed
+asgn1_driver: device opened (count=2)
+asgn1: SET_MODE called
+asgn1_driver: device closed
+asgn1_driver: device opened (count=3)
+asgn1_driver: received 17 bytes: [hello-normal mode]
+asgn1_driver: device closed
+asgn1_driver: device opened (count=4)
+asgn1_driver: sent 17 bytes to user
+asgn1_driver: device closed
+asgn1_driver: device opened (count=5)
+asgn1: SET_MODE called
+asgn1_driver: device closed
+asgn1_driver: device opened (count=6)
+asgn1_driver: received 12 bytes: [[KERNEL] hello-kernel]
+asgn1_driver: device closed
+asgn1_driver: device opened (count=7)
+asgn1_driver: sent 21 bytes to user
+asgn1_driver: device closed
+asgn1_driver: device opened (count=8)
+asgn1: GET_STATS called
+asgn1_driver: device closed
+asgn1_driver: device opened (count=9)
+asgn1: RESET_BUFFER called
+asgn1_driver: device closed
+asgn1_driver: device opened (count=10)
+asgn1_driver: device closed
+asgn1_driver: device opened (count=11)
+asgn1: GET_STATS called
+asgn1_driver: device closed
+asgn1_driver: module unloaded
+===== TASK 1 FINISHED =====
+/ # echo "===== ASGN1_LOG_END ====="

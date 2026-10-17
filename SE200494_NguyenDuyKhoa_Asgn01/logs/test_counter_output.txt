@@ -1,0 +1,40 @@
+/ # echo "===== COUNTER_LOG_START ====="
+===== COUNTER_LOG_START =====
+/ # test_counter.sh
+===== ASSIGNMENT 01 - TASK 2 TEST =====
+counter_driver: loaded
+[1] INITIAL STATS
+Counter value : 0
+Read count    : 0
+Write count   : 0
+[2] THREE READS - expected: 0, 1, 2
+0
+1
+2
+[3] STATS AFTER THREE READS
+Counter value : 3
+Read count    : 3
+Write count   : 0
+[4] SET COUNTER = 100
+next read:
+100
+Counter value : 101
+Read count    : 4
+Write count   : 1
+[5] RESET COUNTER = 0
+next read:
+0
+Counter value : 1
+Read count    : 5
+Write count   : 2
+[6] INVALID NEGATIVE VALUE
+negative value rejected correctly
+[7] INVALID TEXT VALUE
+text value rejected correctly
+[8] UNLOAD MODULE
+counter_driver: unloaded
+[9] DMESG
+counter_driver: loaded
+counter_driver: unloaded
+===== TASK 2 FINISHED =====
+/ # echo "===== COUNTER_LOG_END ====="
