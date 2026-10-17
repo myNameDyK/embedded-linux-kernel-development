@@ -1,4 +1,4 @@
-# Lab 01: Linux kernel build and boot
+# Lab 01: Linux Kernel Build and Boot
 
 ## Introduction
 
@@ -124,7 +124,7 @@ This distinction is important when interpreting the userspace initialization seq
 
 ## Running the system with QEMU
 
-From the `SE200494_NguyenDuyKhoa_Lab01` directory, the completed system can be started with the following command.
+From the Lab 01 directory, the completed system can be started with the following command.
 
 ```bash
 qemu-system-arm \
@@ -220,9 +220,3 @@ Instead, the submission preserves the kernel configuration, BusyBox configuratio
 Reproducing the build requires the corresponding Linux kernel and BusyBox source versions together with an ARM cross-compilation environment. The saved configuration files can then be applied to the appropriate source trees before rebuilding the kernel and BusyBox userspace.
 
 The files in the `output` directory are the generated artifacts used for the completed Lab 01 system.
-
-## Author
-
-Nguyen Duy Khoa
-
-Student ID: SE200494

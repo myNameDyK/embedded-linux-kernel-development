@@ -1,4 +1,4 @@
-# Lab 02: Linux device driver and file system management
+# Lab 02: Character Device Driver and JFFS2
 
 ## Introduction
 
@@ -267,7 +267,7 @@ This confirms that the module is suitable for the ARMv7 target system.
 
 The final Lab 02 system uses the Linux kernel and Device Tree generated in Lab 01 together with the Lab 02 initramfs image.
 
-From the repository root, the system can be started with:
+From the Lab 02 directory, the system can be started with:
 
 ```bash
 qemu-system-arm \
@@ -278,7 +278,7 @@ qemu-system-arm \
   -nographic \
   -kernel ~/embedded_lab1/output/zImage \
   -dtb ~/embedded_lab1/output/vexpress-v2p-ca9.dtb \
-  -initrd SE200494_NguyenDuyKhoa_Lab02/output/initramfs_lab2.cpio.gz \
+  -initrd output/initramfs_lab2.cpio.gz \
   -append 'console=ttyAMA0,115200 rdinit=/sbin/init mem=512M'
 ```
 
@@ -489,9 +489,3 @@ The final `initramfs_lab2.cpio.gz` image in this repository was rebuilt after th
 The character-device, procfs, and sysfs tests were then executed successfully against that rebuilt image.
 
 The MTD/JFFS2 experiment is independent of the QEMU character-device test and was performed on the Ubuntu host using a RAM-backed NAND simulator.
-
-## Author
-
-Nguyen Duy Khoa
-
-Student ID: SE200494
