@@ -51,7 +51,7 @@ assignment02/
 ![Uploading system_architecture.png…]()
 
 
-*Hình 1. Sơ đồ do sinh viên vẽ, thể hiện Kernel Space, 4 worker threads và luồng dữ liệu/IPC.*
+*Hình 1. System Architecture, thể hiện Kernel Space, 4 worker threads và luồng dữ liệu/IPC.*
 
 - **Kernel module `sms_sensor.ko`:** Cung cấp `/dev/sms_sensor` để `read()` mẫu cảm biến, `ioctl()` để cấu hình khoảng lấy mẫu, và `/proc/sms_stats` để xem thống kê.
 - **Sensor Thread:** Lấy mẫu định kỳ qua `clock_nanosleep(... TIMER_ABSTIME ...)`, hỗ trợ `--mock`, đẩy dữ liệu vào **Circular Buffer**.
@@ -62,10 +62,10 @@ assignment02/
 **Lưu ý về hình:** `/proc/sms_stats` là giao diện đọc thống kê bởi người dùng/terminal, không phải một nguồn mẫu trực tiếp cho Sensor Thread. Luồng mẫu log chính là Processor Thread → LogQueue → Logger Thread.
 
 ### 3.2. State Machine
+<img width="450" height="371" alt="application_state_machine" src="https://github.com/user-attachments/assets/9fdeb246-0f4e-4858-a572-dc08c4be283a" />
 
-![Application State Machine](assets/diagrams/application_state_machine.png)
 
-*Hình 2. Vòng đời ứng dụng: INIT → RUNNING → SHUTDOWN → EXIT, kèm nhánh lỗi.*
+*Hình 2. Application State Machine: INIT → RUNNING → SHUTDOWN → EXIT, kèm nhánh lỗi.*
 
 - **INIT:** Khởi tạo buffer, mutex, hàng đợi, signal handler và các thread.
 - **RUNNING:** Thu thập, xử lý, cảnh báo và ghi log định kỳ.
