@@ -48,7 +48,7 @@ assignment02/
 
 ### 3.1. Sơ đồ kiến trúc
 
-![Uploading system_architecture.png…]()
+<img width="984" height="337" alt="system_architecture" src="https://github.com/user-attachments/assets/e043d4f8-6f46-4a31-a389-bcaefeb45cc2" />
 
 
 *Hình 1. System Architecture, thể hiện Kernel Space, 4 worker threads và luồng dữ liệu/IPC.*
