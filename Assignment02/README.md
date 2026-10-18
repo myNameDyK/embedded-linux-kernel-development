@@ -10,8 +10,6 @@ Dự án xây dựng **hệ thống giám sát nhiệt độ và độ ẩm gi�
 
 ## 2. Cấu trúc thư mục
 
-Cấu trúc dưới đây mô tả các thành phần đã sử dụng và các thư mục dành cho minh chứng; nội dung thực tế trong repository có thể khác tùy những tệp được đưa lên GitHub.
-
 ```text
 assignment02/
 ├── README.md                        # Hướng dẫn và kết quả thực nghiệm
