@@ -39,7 +39,7 @@ assignment02/
 ├── output/
 │   └── initramfs_asgn2.cpio.gz     # Initramfs sau khi đóng gói
 ├── logs/                            # Valgrind / GDB / strace / perf / jitter
-└── bao_cao/                         # Báo cáo PDF/DOCX (nếu có)
+└── bao_cao/                         # Báo cáo PDF/DOCX 
 ```
 
 > `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối. 
