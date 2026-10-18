@@ -39,11 +39,10 @@ assignment02/
 ├── output/
 │   └── initramfs_asgn2.cpio.gz     # Initramfs sau khi đóng gói
 ├── logs/                            # Valgrind / GDB / strace / perf / jitter
-├── demo/                            # Video minh chứng (nếu có)
 └── bao_cao/                         # Báo cáo PDF/DOCX (nếu có)
 ```
 
-> `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối. Thư mục `demo/` và `bao_cao/` là vị trí dự kiến, không xác nhận đã có file.
+> `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối. 
 
 ## 3. Thiết kế hệ thống
 
