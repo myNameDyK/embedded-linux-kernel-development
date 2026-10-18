@@ -190,6 +190,4 @@ P99 của FIFO **cao hơn 93 µs (~0,97%)** trong phép đo này; không quan s�
 
 ## 7. Báo cáo và minh chứng
 
-Báo cáo Assignment 02 bao gồm kiến trúc, giải thích quản lý thread và IPC, bộ nhớ, debug/profiling, jitter và bài học rút ra. Video demo theo đề dài **3–5 phút**, trình bày boot QEMU, nạp module, chạy `sms_app -v`, cảnh báo, log và Ctrl+C shutdown.
-
-Các kết quả ở README dựa trên output Terminal và hình ảnh đã ghi nhận trong quá trình làm Assignment 02; phần chưa kiểm chứng được đánh dấu rõ. **Không sử dụng README này để thay thế báo cáo PDF chính thức.**
+Báo cáo Assignment 02 bao gồm kiến trúc, giải thích quản lý thread và IPC, bộ nhớ, debug/profiling, jitter và bài học rút ra.
