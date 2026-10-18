@@ -1,0 +1,10 @@
+make -f ./scripts/Makefile.build obj=/home/quyen/assignment02/driver \
+single-build= \
+need-builtin=1 need-modorder=1
+/tmp/ccqD5ZSe.s: Assembler messages:
+/tmp/ccqD5ZSe.s:366: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccqD5ZSe.s:405: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccqD5ZSe.s:1307: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccqD5ZSe.s:1347: Error: selected processor does not support `isb' in ARM mode
+make[1]: *** [scripts/Makefile.build:277: /home/quyen/assignment02/driver/sms_sensor_driver.o] Error 1
+make: *** [Makefile:1868: /home/quyen/assignment02/driver] Error 2
