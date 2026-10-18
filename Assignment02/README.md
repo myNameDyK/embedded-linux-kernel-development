@@ -15,7 +15,7 @@ Cấu trúc dưới đây mô tả các thành phần đã sử dụng và các 
 ```text
 assignment02/
 ├── README.md                        # Hướng dẫn và kết quả thực nghiệm
-├── assets/diagrams/                 # Hai sơ đồ hệ thống
+├── diagrams/                        # Hai sơ đồ hệ thống
 │   ├── system_architecture.png
 │   └── application_state_machine.png
 ├── app/
@@ -27,19 +27,19 @@ assignment02/
 │   ├── logger_thread.c              # Log queue, ghi file, log rotation
 │   ├── circular_buffer.c            # Ring buffer dùng chung
 │   ├── Makefile                     # Build ứng dụng ARM và x86
-│   ├── sms_app                      # Binary ARM (nếu đính kèm)
-│   └── sms_app_x86                  # Binary x86 (nếu đính kèm)
+│   ├── sms_app                      # Binary ARM 
+│   └── sms_app_x86                  # Binary x86 
 ├── driver/
 │   ├── sms_sensor_driver.c          # Kernel driver mô phỏng cảm biến
 │   ├── sms_sensor.h                 # Định nghĩa ioctl
 │   ├── Makefile                     # Build module ARM
-│   └── sms_sensor.ko                # Module sau khi build (nếu đính kèm)
-├── kernel/linux-5.15/              # Kernel tree riêng (thường không đưa lên Git)
-├── rootfs/                         # Rootfs QEMU (thường không đưa lên Git)
+│   └── sms_sensor.ko                # Module sau khi build 
+├── kernel/linux-5.15/              # Kernel tree riêng 
+├── rootfs/                         # Rootfs QEMU 
 ├── output/
 │   └── initramfs_asgn2.cpio.gz     # Initramfs sau khi đóng gói
 ├── logs/                            # Valgrind / GDB / strace / perf / jitter
-└── bao_cao/                         # Báo cáo PDF/DOCX 
+└── Report/                         # Báo cáo DOCX 
 ```
 
 > `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối. 
