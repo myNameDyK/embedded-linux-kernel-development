@@ -48,7 +48,8 @@ assignment02/
 
 ### 3.1. Sơ đồ kiến trúc
 
-![System Architecture Diagram](assets/diagrams/system_architecture.png)
+![Uploading system_architecture.png…]()
+
 
 *Hình 1. Sơ đồ do sinh viên vẽ, thể hiện Kernel Space, 4 worker threads và luồng dữ liệu/IPC.*
 
