@@ -1,0 +1,12 @@
+make -C /home/quyen/embedded_lab1/kernel/linux-5.15 M=/home/quyen/assignment02/driver ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules
+make -f ./scripts/Makefile.build obj=/home/quyen/assignment02/driver \
+single-build= \
+need-builtin=1 need-modorder=1
+/tmp/ccwjjCC9.s: Assembler messages:
+/tmp/ccwjjCC9.s:366: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccwjjCC9.s:405: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccwjjCC9.s:1307: Error: selected processor does not support `isb' in ARM mode
+/tmp/ccwjjCC9.s:1347: Error: selected processor does not support `isb' in ARM mode
+make[2]: *** [scripts/Makefile.build:277: /home/quyen/assignment02/driver/sms_sensor_driver.o] Error 1
+make[1]: *** [Makefile:1868: /home/quyen/assignment02/driver] Error 2
+make: *** [Makefile:14: arm] Error 2

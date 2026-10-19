@@ -1,0 +1,80 @@
+Breakpoint 1 at 0x3802: file circular_buffer.c, line 88.
+Starting program: /home/quyen/assignment02/app/sms_app_debug --mock --other -i 500 -d 30
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+Downloading separate debug info for system-supplied DSO at 0x7ffff7fbe000
+[###                                                                                   ]                                                                                          Download failed: Timer expired.  Continuing without separate debug info for system-supplied DSO at 0x7ffff7fbe000.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff7bff6c0 (LWP 14605)]
+[New Thread 0x7ffff73fe6c0 (LWP 14606)]
+[New Thread 0x7ffff6bfd6c0 (LWP 14607)]
+[Switching to Thread 0x7ffff6bfd6c0 (LWP 14607)]
+
+Thread 4 "sms_app_debug" hit Breakpoint 1, ring_pop (r=0x7ffffffedad8, s=0x7ffff6bfcdc0) at circular_buffer.c:88
+88	    pthread_mutex_lock(&r->mu);
+$1 = 0
+$2 = 0
+$3 = 0
+$4 = 0
+$5 = 0
+  Id   Target Id                                         Frame 
+  1    Thread 0x7ffff7e78740 (LWP 13336) "sms_app_debug" __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:62
+  2    Thread 0x7ffff7bff6c0 (LWP 14605) "sms_app_debug" __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+  3    Thread 0x7ffff73fe6c0 (LWP 14606) "sms_app_debug" __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+* 4    Thread 0x7ffff6bfd6c0 (LWP 14607) "sms_app_debug" ring_pop (r=0x7ffffffedad8, s=0x7ffff6bfcdc0) at circular_buffer.c:88
+
+Thread 4 (Thread 0x7ffff6bfd6c0 (LWP 14607) "sms_app_debug"):
+#0  ring_pop (r=0x7ffffffedad8, s=0x7ffff6bfcdc0) at circular_buffer.c:88
+#1  0x000055555555874e in processor_main (arg=0x7ffffffedaa0) at processor_thread.c:97
+#2  0x00007ffff7ca3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#3  0x00007ffff7d375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 3 (Thread 0x7ffff73fe6c0 (LWP 14606) "sms_app_debug"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007ffff7ca039c in __internal_syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=<optimized out>, a6=0, nr=243) at ./nptl/cancellation.c:49
+#2  __syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=<optimized out>, a6=a6@entry=0, nr=243) at ./nptl/cancellation.c:75
+#3  0x00007ffff7caff3c in ___mq_timedreceive_time64 (mqdes=<optimized out>, msg_ptr=<optimized out>, msg_len=<optimized out>, msg_prio=<optimized out>, abs_timeout=<optimized out>) at ../sysdeps/unix/sysv/linux/mq_timedreceive.c:35
+#4  0x0000555555558830 in alert_main (arg=0x7ffffffedaa0) at alert_thread.c:43
+#5  0x00007ffff7ca3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#6  0x00007ffff7d375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x7ffff7bff6c0 (LWP 14605) "sms_app_debug"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007ffff7ca030c in __internal_syscall_cancel (a1=a1@entry=140737488346080, a2=<optimized out>, a3=a3@entry=0, a4=a4@entry=140737349941704, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007ffff7ca06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x7fffffffdbe0, expected=0, op=8388233, abstime=0x7ffff7bff9c8, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x7fffffffdbe0, expected=0, clockid=32767, abstime=0x7ffff7bff9c8, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fffffffdbe0, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x7ffff7bfed60, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007ffff7ca3382 in __pthread_cond_wait_common (cond=0x7fffffffdbc0, mutex=0x7fffffffdb98, clockid=<optimized out>, abstime=0x7ffff7bfed60) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x7fffffffdbc0, mutex=0x7fffffffdb98, abstime=0x7ffff7bfed60) at ./nptl/pthread_cond_wait.c:478
+#7  0x00005555555591c4 in logger_main (arg=0x7ffffffedaa0) at logger_thread.c:255
+#8  0x00007ffff7ca3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#9  0x00007ffff7d375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7ffff7e78740 (LWP 13336) "sms_app_debug"):
+#0  __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:62
+#1  0x00007ffff7d374de in __clone3_internal (cl_args=0x7ffffffed760, func=0x7ffff7ca3b00 <start_thread>, arg=0x7ffff63fc6c0) at ../sysdeps/unix/sysv/linux/clone-internal.c:82
+#2  __GI___clone_internal (cl_args=cl_args@entry=0x7ffffffed760, func=func@entry=0x7ffff7ca3b00 <start_thread>, arg=arg@entry=0x7ffff63fc6c0) at ../sysdeps/unix/sysv/linux/clone-internal.c:100
+#3  0x00007ffff7ca3905 in create_thread (pd=pd@entry=0x7ffff63fc6c0, attr=attr@entry=0x7ffffffed870, stopped_start=stopped_start@entry=0x7ffffffed866, stackaddr=stackaddr@entry=0x7ffff5bfc000, stacksize=<optimized out>, thread_ran=thread_ran@entry=0x7ffffffed867) at ./nptl/pthread_create.c:298
+#4  0x00007ffff7ca462e in __pthread_create_2_1 (newthread=<optimized out>, attr=<optimized out>, start_routine=<optimized out>, arg=<optimized out>) at ./nptl/pthread_create.c:863
+#5  0x00005555555572c3 in main (argc=7, argv=0x7fffffffddb8) at sms_app.c:388
+No locals.
+83	}
+84	
+85	/* Pop sensor data from circular buffer */
+86	int ring_pop(Ring *r, SensorData *s)
+87	{
+88	    pthread_mutex_lock(&r->mu);
+89	
+90	    while (r->size == 0 && !r->closed) {
+91	        pthread_cond_wait(&r->not_empty, &r->mu);
+92	    }
+Continuing.
+[New Thread 0x7ffff63fc6c0 (LWP 14608)]
+
+Thread 4 "sms_app_debug" hit Breakpoint 1, ring_pop (r=0x7ffffffedad8, s=0x7ffff6bfcdc0) at circular_buffer.c:88
+88	    pthread_mutex_lock(&r->mu);
+❌️ "on" or "off" expected.

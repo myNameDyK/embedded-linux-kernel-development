@@ -1,0 +1,33 @@
+TASK 4 - REAL-TIME JITTER REPORT
+
+===== SCHED_OTHER =====
+SUMMARY produced=1039 consumed=1039 overflow=0 alerts(T/H/S)=186/169/747 log_dropped=0
+JITTER n=1039 min=427 avg=5032.42 max=9811 p99=9554 us
+HIST [<100us]=0 [100-500us]=3 [500-1000us]=64 [>=1ms]=972
+
+===== SCHED_FIFO =====
+SUMMARY produced=1040 consumed=1040 overflow=0 alerts(T/H/S)=186/169/748 log_dropped=0
+JITTER n=1040 min=360 avg=5054.56 max=9997 p99=9647 us
+HIST [<100us]=0 [100-500us]=6 [500-1000us]=50 [>=1ms]=984
+
+===== P99 COMPARISON =====
+SCHED_OTHER P99: 9554 us
+SCHED_FIFO  P99: 9647 us
+P99 improvement: -0.97%
+/ # cat /tmp/jitter_report.txt
+TASK 4 - REAL-TIME JITTER REPORT
+
+===== SCHED_OTHER =====
+SUMMARY produced=1039 consumed=1039 overflow=0 alerts(T/H/S)=186/169/747 log_dropped=0
+JITTER n=1039 min=427 avg=5032.42 max=9811 p99=9554 us
+HIST [<100us]=0 [100-500us]=3 [500-1000us]=64 [>=1ms]=972
+
+===== SCHED_FIFO =====
+SUMMARY produced=1040 consumed=1040 overflow=0 alerts(T/H/S)=186/169/748 log_dropped=0
+JITTER n=1040 min=360 avg=5054.56 max=9997 p99=9647 us
+HIST [<100us]=0 [100-500us]=6 [500-1000us]=50 [>=1ms]=984
+
+===== P99 COMPARISON =====
+SCHED_OTHER P99: 9554 us
+SCHED_FIFO  P99: 9647 us
+P99 improvement: -0.97%
