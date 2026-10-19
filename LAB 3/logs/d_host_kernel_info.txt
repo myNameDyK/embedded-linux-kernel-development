@@ -1,0 +1,17 @@
+Kernel:
+Linux localhost.localdomain 5.14.0-687.44.1.el9_8.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 9 11:11:28 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+
+PREEMPT configuration:
+CONFIG_PREEMPT_BUILD=y
+CONFIG_PREEMPT_VOLUNTARY=y
+CONFIG_PREEMPT_COUNT=y
+CONFIG_PREEMPTION=y
+CONFIG_PREEMPT_DYNAMIC=y
+CONFIG_PREEMPT_RCU=y
+CONFIG_PREEMPT_NOTIFIERS=y
+
+Realtime kernel flag:
+Not exposed by current kernel
+
+CPU cores:
+32

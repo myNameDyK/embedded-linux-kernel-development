@@ -1,0 +1,131 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 395  of event 'cpu-clock:u'
+# Event count (approx.): 1984924375
+#
+# Overhead  Command          Shared Object        Symbol                  IPC   [IPC Coverage]
+# ........  ...............  ...................  ......................  ....................
+#
+    51.39%  perf_target_pro  perf_target_profile  [.] heavy_compute       -      -            
+            |
+            ---heavy_compute
+               main
+               __libc_start_call_main
+
+     8.86%  perf_target_pro  libm.so.6            [.] 0x000000000007006d  -      -            
+            |
+            ---0x7fb7d63ba06d
+               main
+               __libc_start_call_main
+
+     5.82%  perf_target_pro  libm.so.6            [.] 0x0000000000070056  -      -            
+            |
+            ---0x7fb7d63ba056
+               main
+               __libc_start_call_main
+
+     4.30%  perf_target_pro  libm.so.6            [.] log                 -      -            
+            |
+            ---log
+               main
+               __libc_start_call_main
+
+     4.05%  perf_target_pro  libm.so.6            [.] 0x000000000006fffe  -      -            
+            |
+            ---0x7fb7d63b9ffe
+               main
+               __libc_start_call_main
+
+     4.05%  perf_target_pro  libm.so.6            [.] 0x0000000000070027  -      -            
+            |
+            ---0x7fb7d63ba027
+               main
+               __libc_start_call_main
+
+     3.54%  perf_target_pro  libm.so.6            [.] 0x000000000006ff7e  -      -            
+            |
+            ---0x7fb7d63b9f7e
+               main
+               __libc_start_call_main
+
+     3.54%  perf_target_pro  libm.so.6            [.] 0x0000000000070069  -      -            
+            |
+            ---0x7fb7d63ba069
+               main
+               __libc_start_call_main
+
+     2.78%  perf_target_pro  libm.so.6            [.] 0x000000000006ffbf  -      -            
+            |
+            ---0x7fb7d63b9fbf
+               main
+               __libc_start_call_main
+
+     2.03%  perf_target_pro  libm.so.6            [.] 0x000000000006ff95  -      -            
+            |
+            ---0x7fb7d63b9f95
+               main
+               __libc_start_call_main
+
+     1.77%  perf_target_pro  perf_target_profile  [.] log@plt             -      -            
+            |
+            ---log@plt
+               main
+               __libc_start_call_main
+
+     1.52%  perf_target_pro  libm.so.6            [.] 0x000000000007000b  -      -            
+            |
+            ---0x7fb7d63ba00b
+               main
+               __libc_start_call_main
+
+     1.27%  perf_target_pro  libm.so.6            [.] __log_finite@plt    -      -            
+            |
+            ---__log_finite@plt
+               main
+               __libc_start_call_main
+
+     1.01%  perf_target_pro  libm.so.6            [.] 0x000000000006ffdc  -      -            
+            |
+            ---0x7fb7d63b9fdc
+               main
+               __libc_start_call_main
+
+     1.01%  perf_target_pro  libm.so.6            [.] 0x0000000000070010  -      -            
+            |
+            ---0x7fb7d63ba010
+               main
+               __libc_start_call_main
+
+     0.76%  perf_target_pro  libm.so.6            [.] 0x000000000006ffe4  -      -            
+            |
+            ---0x7fb7d63b9fe4
+               main
+               __libc_start_call_main
+
+     0.76%  perf_target_pro  libm.so.6            [.] 0x000000000007003c  -      -            
+            |
+            ---0x7fb7d63ba03c
+               main
+               __libc_start_call_main
+
+     0.76%  perf_target_pro  libm.so.6            [.] 0x000000000007005f  -      -            
+            |
+            ---0x7fb7d63ba05f
+               main
+               __libc_start_call_main
+
+     0.51%  perf_target_pro  libm.so.6            [.] 0x0000000000070038  -      -            
+            |
+            ---0x7fb7d63ba038
+               main
+               __libc_start_call_main
+
+     0.25%  perf_target_pro  libm.so.6            [.] 0x0000000000070049  -      -            
+
+
+#
+# (Tip: Limit to show entries above 5% only: perf report --percent-limit 5)
+#

@@ -1,0 +1,1 @@
+WARN: not setting cpu_dma_latency from cyclictest

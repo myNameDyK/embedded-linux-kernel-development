@@ -1,0 +1,11 @@
+2026-10-17T18:02:35+07:00
+Linux localhost.localdomain 5.14.0-687.44.1.el9_8.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 9 11:11:28 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+CPU count: 32
+Kernel preemption: PREEMPT_DYNAMIC
+Test: baseline, no intentional stress workload
+Threads: 4
+Priority: 80
+Policy: SCHED_FIFO
+Interval: 1000 us
+Loops per thread: 10000
+Histogram range: 0-4999 us

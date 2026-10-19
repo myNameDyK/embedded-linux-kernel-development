@@ -1,0 +1,22 @@
+--- /home/nguyenky/embedded_lab3/apps/leaky_app_buggy.c	2026-10-17 17:27:20.961914555 +0700
++++ /home/nguyenky/embedded_lab3/apps/leaky_app_fixed.c	2026-10-17 17:27:20.996914686 +0700
+@@ -35,8 +35,8 @@
+ /* BUG 1: Quen free name va scores */
+ void delete_record(Record *r)
+ {
+-    /* free(r->name);  */
+-    /* free(r->scores); */
++    free(r->name);
++    free(r->scores);
+ 
+     free(r);
+ }
+@@ -59,7 +59,7 @@
+             printf("Processed: %s\n", buf);
+         }
+ 
+-        /* BUG: Thieu free(buf); */
++        free(buf);
+     }
+ }
+ 

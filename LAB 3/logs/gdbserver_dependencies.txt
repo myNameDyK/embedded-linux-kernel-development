@@ -1,0 +1,23 @@
+GDBSERVER ELF:
+/home/nguyenky/embedded_lab3/rootfs/initramfs/usr/bin/gdbserver: ELF 32-bit LSB executable, ARM, EABI5 version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.2.0, with debug_info, not stripped
+
+PROGRAM INTERPRETER:
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+
+DYNAMIC DEPENDENCIES:
+--- gdbserver ---
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+--- libstdc++.so.6 ---
+ 0x00000001 (NEEDED)                     Shared library: [libm.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [ld-linux-armhf.so.3]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+--- libm.so.6 ---
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+--- libgcc_s.so.1 ---
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+--- libc.so.6 ---
+ 0x00000001 (NEEDED)                     Shared library: [ld-linux-armhf.so.3]

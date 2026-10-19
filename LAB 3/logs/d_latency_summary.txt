@@ -1,0 +1,10 @@
+===== STANDARD =====
+Thread 0: Min=7 Avg=14 Max=121 Samples=10000 Above500=0 AtOrAbove500=0
+Thread 1: Min=6 Avg=14 Max=124 Samples=10000 Above500=0 AtOrAbove500=0
+Thread 2: Min=8 Avg=15 Max=142 Samples=10000 Above500=0 AtOrAbove500=0
+Thread 3: Min=7 Avg=13 Max=188 Samples=10000 Above500=0 AtOrAbove500=0
+===== STRESS =====
+Thread 0: Min=6 Avg=12 Max=2042 Samples=10000 Above500=4 AtOrAbove500=4
+Thread 1: Min=4 Avg=10 Max=1121 Samples=10000 Above500=2 AtOrAbove500=2
+Thread 2: Min=4 Avg=10 Max=964 Samples=10000 Above500=1 AtOrAbove500=1
+Thread 3: Min=6 Avg=19 Max=3919 Samples=9968 Above500=35 AtOrAbove500=35
