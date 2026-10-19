@@ -1,8 +1,6 @@
 # LAB-03 — EMBEDDED LINUX SYSTEMS
 **Remote Debugging | Memory Analysis | Performance Profiling | Real-Time Latency**
 
-**Sinh viên:** Nguyễn Cao Kỳ  
-**MSSV:** SE201611  
 **Ngày thực hiện:** 17/10/2026  
 **Môn học:** Embedded Linux Systems  
 **Chủ đề:** Debugging Kernel & Phân tích Hiệu năng Ứng dụng Nhúng
@@ -133,7 +131,7 @@ Phần Real-Time Latency được đo trực tiếp trên Host để tránh sai 
 ## 3. Cấu trúc thư mục dự án
 
 ```text
-SE201611_NguyenCaoKy_Lab03/
+Lab03/
 |
 |-- README.md
 |-- README_NopBai.txt
@@ -196,9 +194,9 @@ SE201611_NguyenCaoKy_Lab03/
 |   |
 |   |-- ... additional experiment logs
 |
-|-- bao_cao/
+|-- report/
     |
-    |-- SE201611_Lab03_BaoCao.pdf
+    |-- Lab03_Report.pdf
 ```
 
 ### 3.1. Thư mục `apps/`
@@ -248,11 +246,11 @@ Nhóm cyclictest/stress-ng lưu độ trễ lập lịch, histogram và các đi
 
 Các file log được giữ để có thể truy vết kết quả trong báo cáo về dữ liệu gốc.
 
-### 3.4. Thư mục `bao_cao/`
+### 3.4. Thư mục `report/`
 
 Chứa báo cáo PDF chính thức:
 
-`SE201611_Lab03_BaoCao.pdf`
+`Lab03_Report.pdf`
 
 Báo cáo trình bày phương pháp, kết quả, phân tích kỹ thuật và các câu hỏi của đề LAB-03.
 
@@ -633,7 +631,7 @@ Histogram stress cũng chỉ ghi nhận 39.968 mẫu, được giữ nguyên the
 
 **Báo cáo chính thức**
 
-`bao_cao/SE201611_Lab03_BaoCao.pdf`
+`report/Lab03_Report.pdf`
 
 **Remote Debugging**
 
@@ -678,6 +676,5 @@ Dự án giúp làm rõ sự khác biệt giữa lỗi logic chương trình, l�
 
 ---
 
-**Nguyễn Cao Kỳ — SE201611**  
 **Embedded Linux Systems — LAB-03**  
 **17/10/2026**

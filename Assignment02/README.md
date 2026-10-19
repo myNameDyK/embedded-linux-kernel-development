@@ -1,8 +1,10 @@
 # Assignment 02 – Sensor Monitoring System
 
-**Môn học:** Embedded Linux Systems  
-**Nền tảng kiểm thử:** QEMU Vexpress-A9, ARMv7, Linux 5.15  
-**Ngôn ngữ lập trình:** C – Linux Kernel Module, POSIX Threads, POSIX Message Queue  
+| Item | Configuration |
+| --- | --- |
+| Course | Embedded Linux Systems |
+| Test platform | QEMU Vexpress-A9, ARMv7, Linux 5.15 |
+| Programming | C, Linux Kernel Module, POSIX Threads, POSIX Message Queue |
 
 ## 1. Giới thiệu
 
@@ -11,7 +13,7 @@ Dự án xây dựng **hệ thống giám sát nhiệt độ và độ ẩm gi�
 ## 2. Cấu trúc thư mục
 
 ```text
-assignment02/
+Assignment02/
 ├── README.md                        # Hướng dẫn và kết quả thực nghiệm
 ├── diagrams/                        # Hai sơ đồ hệ thống
 │   ├── system_architecture.png
@@ -25,22 +27,22 @@ assignment02/
 │   ├── logger_thread.c              # Log queue, ghi file, log rotation
 │   ├── circular_buffer.c            # Ring buffer dùng chung
 │   ├── Makefile                     # Build ứng dụng ARM và x86
-│   ├── sms_app                      # Binary ARM 
-│   └── sms_app_x86                  # Binary x86 
+│   ├── sms_app                      # Binary ARM
+│   └── sms_app_x86                  # Binary x86
 ├── driver/
 │   ├── sms_sensor_driver.c          # Kernel driver mô phỏng cảm biến
 │   ├── sms_sensor.h                 # Định nghĩa ioctl
 │   ├── Makefile                     # Build module ARM
-│   └── sms_sensor.ko                # Module sau khi build 
-├── kernel/linux-5.15/              # Kernel tree riêng 
-├── rootfs/                         # Rootfs QEMU 
+│   └── sms_sensor.ko                # Module sau khi build
+├── kernel/linux-5.15/              # Kernel tree riêng
+├── rootfs/                         # Rootfs QEMU
 ├── output/
 │   └── initramfs_asgn2.cpio.gz     # Initramfs sau khi đóng gói
 ├── logs/                            # Valgrind / GDB / strace / perf / jitter
-└── Report/                         # Báo cáo DOCX 
+└── report/                         # Báo cáo DOCX
 ```
 
-> `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối. 
+> `kernel/`, `rootfs/`, `output/` có thể rất lớn; chỉ commit các thành phần được yêu cầu nộp hoặc đủ điều kiện phân phối.
 
 ## 3. Thiết kế hệ thống
 
@@ -93,9 +95,9 @@ Ví dụ theo đường dẫn của môi trường đã triển khai:
 ```bash
 qemu-system-arm \
   -M vexpress-a9 -cpu cortex-a9 -m 512M \
-  -kernel ~/assignment02/kernel/linux-5.15/arch/arm/boot/zImage \
-  -dtb ~/assignment02/kernel/linux-5.15/arch/arm/boot/dts/vexpress-v2p-ca9.dtb \
-  -initrd ~/assignment02/output/initramfs_asgn2.cpio.gz \
+  -kernel ~/Assignment02/kernel/linux-5.15/arch/arm/boot/zImage \
+  -dtb ~/Assignment02/kernel/linux-5.15/arch/arm/boot/dts/vexpress-v2p-ca9.dtb \
+  -initrd ~/Assignment02/output/initramfs_asgn2.cpio.gz \
   -append "console=ttyAMA0 rdinit=/init" -nographic
 ```
 
