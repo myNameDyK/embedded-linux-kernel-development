@@ -1,79 +1,269 @@
-# Embedded Linux Systems — LAB-01 & LAB-02
+# Embedded Linux Systems: ARM/QEMU Labs and Assignments
 
-**Sinh viên:** Phạm Võ Hoàng Nhân · **MSSV:** SE200778 · **Lớp:** IC2008  
-**Giảng viên:** Phạm Thế Vinh  
-**Nền tảng:** ARMv7 Cortex-A9, QEMU `vexpress-a9`
+This repository collects a sequence of Embedded Linux laboratories and assignments built around an ARMv7-A target running under QEMU. The work progresses from Linux system bring-up and root-filesystem construction to kernel-driver development, userspace/kernel interfaces, remote debugging, performance analysis, real-time latency measurement, and a multithreaded sensor-monitoring application.
 
-Hai bài thực hành nối tiếp nhau: **LAB-01 xây dựng hệ thống Linux tối giản và khởi động đến BusyBox shell**; **LAB-02 sử dụng kernel và môi trường đó để phát triển character device driver, xuất thông tin qua procfs/sysfs và thực hành filesystem trên flash giả lập**.
+The repository is organized as a course workspace rather than a single application. Each Lab or Assignment is self-contained and has its own `README.md` with detailed build, run, test, and analysis procedures. This top-level README provides the technical overview and navigation for the complete repository.
 
-## Báo cáo và sơ đồ
+## Technical Scope
 
-| Bài thực hành | Nội dung chính | Báo cáo chi tiết | Sơ đồ PDF |
-| --- | --- | --- | --- |
-| LAB-01 | Build kernel, U-Boot, BusyBox và initramfs; quan sát chuỗi khởi động | [Báo cáo LAB-01](SE200778_PhamVoHoangNhan_Lab01/SE200778_PhamVoHoangNhan_Lab01_BaoCao.pdf) | [Chuỗi khởi động](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf) |
-| LAB-02 | Character device driver, procfs/sysfs, MTD/JFFS2 và tự nạp module khi boot | [Báo cáo LAB-02](SE200778_PhamVoHoangNhan_Lab02/SE200778_PhamVoHoangNhan_Lab02_BaoCao.pdf) | [Kiến trúc driver](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf) |
-
-## Môi trường thực hành
-
-| Thành phần | Cấu hình được ghi nhận trong báo cáo |
+| Area | Topics covered |
 | --- | --- |
-| Host | Ubuntu 26.04 |
-| Toolchain | `arm-linux-gnueabihf`, GCC 15.2 |
-| Target | QEMU `vexpress-a9`, Cortex-A9, ARMv7-A |
-| Linux kernel | 5.15.0, `vexpress_defconfig`, hỗ trợ SMP |
-| U-Boot | 2022.04 |
-| BusyBox | 1.35.0, build static |
-| Môi trường LAB-02 | Phần A, B, D chạy trong QEMU; phần C (MTD/JFFS2) chạy trên host |
+| System bring-up | ARM cross-compilation, Linux kernel, Device Tree, BusyBox, initramfs, QEMU boot |
+| Kernel development | Loadable kernel modules, character devices, `file_operations`, miscdevice |
+| Kernel interfaces | `/dev`, procfs, sysfs, ioctl, userspace/kernel data transfer |
+| Storage | MTD concepts and JFFS2 experiments |
+| Debugging | GDB, gdbserver, remote ARM debugging, backtraces, register and memory inspection |
+| Memory analysis | Valgrind, leak detection, `/proc/<PID>/status`, process memory maps |
+| Performance analysis | strace, perf, system-call profiling, CPU hotspot analysis |
+| Real-time analysis | cyclictest, stress-ng, scheduling latency and jitter |
+| Userspace systems | POSIX threads, circular buffers, POSIX message queues, logging and signal handling |
 
-## LAB-01 — Cấu hình kernel và khởi động hệ thống nhúng
+## Target and Development Environment
 
-LAB-01 xây dựng các thành phần nền tảng: kernel `zImage`, Device Tree `vexpress-v2p-ca9.dtb`, BusyBox và root filesystem đóng gói thành `initramfs.cpio.gz`.
+| Component | Configuration |
+| --- | --- |
+| Target architecture | ARMv7-A |
+| Processor model | ARM Cortex-A9 |
+| Emulated platform | QEMU `vexpress-a9` |
+| Linux kernel | Linux 5.15 |
+| Userspace | BusyBox / initramfs |
+| Cross toolchain | GNU `arm-linux-gnueabihf-` |
+| Host architecture | x86_64 Linux |
+| Host distributions | Ubuntu or AlmaLinux, depending on the exercise |
+| Main languages | C, shell |
+| Debug/profiling tools | GDB, gdbserver, Valgrind, strace, perf |
+| Real-time tools | cyclictest, stress-ng |
 
-**Sơ đồ:** [Mở sơ đồ chuỗi khởi động Embedded Linux (PDF)](SE200778_PhamVoHoangNhan_Lab01/diagrams/Embedded_Linux_Boot.drawio.pdf)
+Exact host versions, tool versions, kernel configuration, command lines, and exercise-specific assumptions are documented in the corresponding module README.
 
-Nội dung chính:
+## Host–Target Model
 
-- Cấu hình và build kernel cho `vexpress-a9`, giữ UART PL011 để có console `ttyAMA0` và bật SMP.
-- Khảo sát biến môi trường, địa chỉ nạp và `bootargs` trong U-Boot.
-- Quan sát kernel panic khi chưa có root filesystem, sau đó bổ sung initramfs để boot đến shell.
-- Kiểm tra hệ thống bằng `uname -a`, `mount` và `ps`; xác nhận BusyBox init chạy với PID 1.
-- Phân tích toolchain, memory map, thanh ghi MIDR, static linking và SMP; ghi lại các lỗi tương thích khi build mã nguồn cũ bằng GCC mới.
+```text
+x86_64 Linux host
+|
+|-- native GCC
+|-- ARM cross-compiler
+|-- GDB / gdbserver client
+|-- Valgrind
+|-- strace / perf
+|-- cyclictest / stress-ng
+|
++--> ARM kernel, modules, applications and initramfs
+        |
+        v
+QEMU vexpress-a9
+|
+|-- ARM Cortex-A9
+|-- Linux 5.15
+|-- BusyBox userspace
+|-- kernel modules
+|-- ARM test applications
+|
++--> serial console, /proc, /sys, /dev and debug interfaces
+```
 
-**Lưu ý khi đọc sơ đồ:** ROM Bootloader thể hiện giai đoạn khởi động tổng quát trên board thật. Trong thí nghiệm QEMU, báo cáo mô tả cả cách khởi chạy U-Boot bằng `-kernel u-boot` và cách nạp trực tiếp kernel bằng `-kernel zImage -dtb ... -initrd ...`.
+Some tools run on the x86_64 development host, while target binaries and kernel modules run inside the ARM system. This distinction is kept explicit throughout the repository because it affects build commands, runtime libraries, profiling results, and debugging procedures.
 
-## LAB-02 — Device driver và quản lý filesystem
+## Repository Map
 
-LAB-02 tiếp tục dùng kernel 5.15.0 từ LAB-01. Module `lab2_driver.ko` cung cấp character device `/dev/lab2`, nhận dữ liệu từ user space và trả lại dữ liệu qua các hàm trong bảng `file_operations`.
-
-**Sơ đồ:** [Mở sơ đồ kiến trúc character device driver (PDF)](SE200778_PhamVoHoangNhan_Lab02/diagrams/Lab2_Character_Driver.drawio.pdf)
-
-| Phần | Nội dung | Kết quả được trình bày trong báo cáo |
+| Module | Focus | Detailed documentation |
 | --- | --- | --- |
-| A — Character device | Build module ARM, đăng ký major 240, xử lý `open/read/write/release` | Kiểm tra `file`, `modinfo`, `lsmod`, ghi/đọc `/dev/lab2`, chạy `test_driver.sh` và xem `dmesg` |
-| B — procfs và sysfs | Công bố trạng thái buffer và bộ đếm mở thiết bị | Đọc `/proc/lab2_info` và các thuộc tính `buffer_len`, `open_count`, `last_data` trong `/sys/class/lab2_class/lab2/` |
-| C — MTD và JFFS2 | Giả lập NAND bằng `nandsim` trên host | Khảo sát MTD, tạo và ghi image JFFS2, mount qua `mtdblock1`, đọc file và xem dump thô |
-| D — BusyBox init | Tích hợp module vào rootfs và nạp bằng `rcS` | Boot log cho thấy module được nạp và `/dev/lab2` được tạo tự động |
+| Lab 01 | Build and boot a minimal ARM Embedded Linux system | [Lab01/README.md](Lab01/README.md) |
+| Lab 02 | Character device driver, procfs/sysfs, system integration and JFFS2 | [Lab02/README.md](Lab02/README.md) |
+| Lab 03 | Remote debugging, memory analysis, profiling and real-time latency | [Lab03/README.md](Lab03/README.md) |
+| Assignment 01 | ioctl character driver and misc counter driver | [Assignment01/README.md](Assignment01/README.md) |
+| Assignment 02 | Multithreaded sensor-monitoring system with kernel/user-space integration | [Assignment02/README.md](Assignment02/README.md) |
 
-**Đặc điểm của bản driver trong báo cáo:** `open_count` đếm tổng số lần mở thiết bị. Đường ghi dùng `lab2_mutex`; báo cáo cũng chỉ ra đường đọc và các hàm sysfs còn cần đồng bộ thêm khi có truy cập đồng thời.
+Top-level layout:
 
-**Thiết bị flash trong thí nghiệm:** trên host của báo cáo, NAND giả lập là `mtd1`; `mtd0` mang tên `BIOS` là flash firmware thật. Chỉ số thiết bị cần được xác định theo môi trường thực tế.
+```text
+embedded-linux-kernel-development/
+├── Lab01/
+├── Lab02/
+├── Lab03/
+├── Assignment01/
+├── Assignment02/
+├── .gitignore
+└── README.md
+```
 
-## Mối liên hệ giữa hai bài
+Each module contains only the files relevant to that exercise, such as source code, configuration files, root filesystems, generated images, logs, diagrams, reports, or test artifacts.
 
-| Thành phần từ LAB-01 | Vai trò trong LAB-02 |
-| --- | --- |
-| Kernel 5.15.0 và cấu hình ARM | Là kernel đích để build và nạp `lab2_driver.ko`; vermagic của module phải phù hợp |
-| BusyBox và initramfs | Cung cấp shell, các lệnh kiểm thử và nơi đặt module/script trong rootfs |
-| `/etc/inittab` và `/etc/init.d/rcS` | Được mở rộng để mount filesystem, nạp module và tạo device node khi boot |
-| Console QEMU | Dùng theo dõi boot log, kiểm tra driver và đọc procfs/sysfs |
+## Lab 01: Linux Kernel Build and Boot
 
-Đọc **LAB-01 trước** để nắm chuỗi khởi động và môi trường chạy, sau đó đọc **LAB-02** để theo dõi cách driver hoạt động trong hệ thống đó. Ảnh chụp kết quả, câu trả lời phân tích và các khó khăn thực tế nằm trong từng báo cáo PDF.
+Lab 01 establishes the base ARM Embedded Linux environment.
 
-## Thư mục tài liệu của sinh viên
+The completed system contains:
 
-| Đường dẫn | Nội dung |
-| --- | --- |
-| [SE200778_PhamVoHoangNhan_Lab01/](SE200778_PhamVoHoangNhan_Lab01/) | Báo cáo LAB-01 và thư mục `diagrams/` chứa sơ đồ `.drawio.pdf` |
-| [SE200778_PhamVoHoangNhan_Lab02/](SE200778_PhamVoHoangNhan_Lab02/) | Báo cáo LAB-02 và thư mục `diagrams/` chứa sơ đồ `.drawio.pdf` |
+- a Linux 5.15 ARM kernel image;
+- the `vexpress-v2p-ca9.dtb` Device Tree Blob;
+- BusyBox userspace;
+- a complete initramfs filesystem;
+- saved kernel and BusyBox configurations;
+- bootable output artifacts for QEMU.
 
-Các bài thực hành đã có trong repository: [Nguyễn Duy Khoa — LAB-01](SE200494_NguyenDuyKhoa_Lab01/), [LAB-02](SE200494_NguyenDuyKhoa_Lab02/), [Assignment 01](SE200494_NguyenDuyKhoa_Asgn01/).
+The laboratory demonstrates the relationship between the kernel, Device Tree, initial RAM filesystem, BusyBox initialization, and the QEMU machine model.
+
+See [Lab 01 documentation](Lab01/README.md) for the boot command, initialization sequence, configuration details, and verification procedure.
+
+## Lab 02: Character Device Driver and JFFS2
+
+Lab 02 extends the Lab 01 system with a loadable Linux character device driver.
+
+The driver exposes a `/dev/lab2` interface and demonstrates:
+
+- `open`, `read`, `write`, and `release` file operations;
+- safe userspace/kernel-space data transfer;
+- shared-state protection;
+- runtime information through procfs;
+- device attributes through sysfs;
+- automatic module integration into the target initramfs;
+- shell-based validation;
+- an MTD/JFFS2 experiment on the development host.
+
+The repository keeps the driver source, compiled module, target root filesystem, generated initramfs, validation logs, diagrams, and report material together under `Lab02/`.
+
+See [Lab 02 documentation](Lab02/README.md) for the driver interface, build process, target integration, test procedures, and JFFS2 experiment.
+
+## Lab 03: Debugging and Performance Analysis
+
+Lab 03 focuses on debugging and performance analysis across both the Linux host and the ARM target.
+
+The work is divided into four areas:
+
+1. Remote debugging of ARM applications with GDB and gdbserver.
+2. Memory-error and leak analysis with Valgrind and Linux `/proc` interfaces.
+3. System-call and CPU profiling with strace and perf.
+4. Scheduling-latency analysis with cyclictest and stress-ng.
+
+The module retains test applications, ARM and host executables, profiling data, console logs, latency measurements, plots, and the generated ARM initramfs used during the experiments.
+
+Real-time latency measurements are performed on the host where appropriate rather than treating QEMU timing as equivalent to physical hardware timing.
+
+See [Lab 03 documentation](Lab03/README.md) for the experimental setup, measured results, debugging workflow, and analysis.
+
+## Assignment 01: ioctl and Misc Device Drivers
+
+Assignment 01 develops two kernel-driver exercises on top of the ARM Linux environment.
+
+The first task implements a character driver with:
+
+- custom ioctl commands;
+- a shared userspace/kernel ioctl header;
+- runtime statistics;
+- procfs and sysfs interfaces;
+- a userspace ioctl test utility.
+
+The second task implements a counter device using the Linux miscdevice framework, together with repeatable test scripts and recorded logs.
+
+This assignment emphasizes interface design between userspace and kernel space rather than only basic module loading.
+
+See [Assignment 01 documentation](Assignment01/README.md) for the ioctl definitions, driver behavior, build instructions, and validation results.
+
+## Assignment 02: Sensor Monitoring System
+
+Assignment 02 combines kernel-space and userspace components into a larger Embedded Linux application.
+
+The repository contains:
+
+- a simulated sensor kernel-driver implementation;
+- a multithreaded C application;
+- a circular buffer for sample transfer;
+- processing and alert threads;
+- POSIX message-queue communication;
+- asynchronous logging;
+- scheduling and jitter measurements;
+- GDB, Valgrind, strace, and perf evidence;
+- system architecture and application-state diagrams.
+
+The assignment demonstrates how lower-level topics from the laboratories can be combined into a concurrent userspace application interacting with a Linux device driver.
+
+See [Assignment 02 documentation](Assignment02/README.md) for the architecture, build procedure, runtime modes, profiling results, and limitations.
+
+## Learning Progression
+
+```text
+Lab 01
+System bring-up
+    |
+    v
+Lab 02
+Kernel module and device-driver integration
+    |
+    v
+Lab 03
+Debugging, memory analysis and performance profiling
+    |
+    v
+Assignment 01
+Kernel/user-space control interfaces
+    |
+    v
+Assignment 02
+Integrated multithreaded Embedded Linux application
+```
+
+This progression follows a practical Embedded Linux workflow: establish a bootable target, add kernel functionality, learn how to observe and debug the system, and then integrate those components into larger applications.
+
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/myNameDyK/embedded-linux-kernel-development.git
+cd embedded-linux-kernel-development
+```
+
+There is intentionally no single top-level build command because the modules target different stages of the Embedded Linux workflow and use different host-side tools.
+
+For a first pass through the repository, follow the module documentation in this order:
+
+```text
+Lab01/README.md
+Lab02/README.md
+Lab03/README.md
+Assignment01/README.md
+Assignment02/README.md
+```
+
+## Reproducibility Notes
+
+Embedded Linux artifacts are sensitive to target architecture, kernel configuration, toolchain, and runtime environment. When rebuilding or reusing this repository:
+
+- build kernel modules against a kernel tree and configuration compatible with the target kernel;
+- build ARM userspace programs with an ARM-compatible toolchain and provide matching runtime libraries for dynamically linked binaries;
+- keep the Device Tree, kernel image, and QEMU machine configuration consistent;
+- prefer rebuilding prebuilt modules and binaries when the toolchain or target kernel changes;
+- treat host-side profiling results as environment-specific measurements rather than universal performance numbers;
+- use QEMU for functional validation and debugging, but do not interpret emulator timing as a direct measurement of physical ARM hardware;
+- preserve configuration files, logs, and reports when reproducing experiments because they are part of the validation record.
+
+## Validation and Evidence
+
+Depending on the module, the repository preserves:
+
+- kernel and BusyBox configuration files;
+- Linux kernel modules and ARM executables;
+- initramfs images;
+- boot and test logs;
+- GDB sessions;
+- Valgrind reports;
+- strace and perf output;
+- cyclictest and stress-ng measurements;
+- architecture diagrams;
+- laboratory reports.
+
+This makes it possible to inspect not only how each exercise was implemented, but also how it was validated.
+
+## Documentation Structure
+
+Documentation is split into two levels:
+
+- this root README gives the architecture, scope, environment, progression, and navigation for the repository;
+- each Lab or Assignment README contains detailed commands, implementation notes, measurements, and exercise-specific conclusions.
+
+This keeps the repository landing page concise while preserving detailed technical information close to the files it describes.
+
+## Repository Status
+
+This repository is maintained as an educational Embedded Linux coursework archive. It is intended for study, reproduction of the laboratory workflows, and review of the resulting artifacts. It is not a production Board Support Package, and any reuse on a different board, kernel, or toolchain should begin by validating the target-specific assumptions documented in each module.
