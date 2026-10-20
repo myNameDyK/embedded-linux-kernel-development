@@ -1,8 +1,6 @@
 # LAB-03 — EMBEDDED LINUX SYSTEMS
 **Remote Debugging | Memory Analysis | Performance Profiling | Real-Time Latency**
-
-**Sinh viên:** Nguyễn Cao Kỳ  
-**MSSV:** SE201611  
+**Tên nhóm: nhóm 
 **Ngày thực hiện:** 17/10/2026  
 **Môn học:** Embedded Linux Systems  
 **Chủ đề:** Debugging Kernel & Phân tích Hiệu năng Ứng dụng Nhúng
