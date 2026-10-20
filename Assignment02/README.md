@@ -39,7 +39,7 @@ Assignment02/
 ├── output/
 │   └── initramfs_asgn2.cpio.gz      # Packaged initramfs
 ├── logs/                            # Valgrind / GDB / strace / perf / jitter
-└── report/                          # DOCX report
+└── report/                          #  report
 ```
 
 > `kernel/`, `rootfs/`, and `output/` may be very large. Commit only components required for submission or permitted for redistribution.
