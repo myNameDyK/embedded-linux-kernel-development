@@ -1,45 +1,46 @@
 # LAB-03 — EMBEDDED LINUX SYSTEMS
+
 **Remote Debugging | Memory Analysis | Performance Profiling | Real-Time Latency**
 
-**Ngày thực hiện:** 17/10/2026  
-**Môn học:** Embedded Linux Systems  
-**Chủ đề:** Debugging Kernel & Phân tích Hiệu năng Ứng dụng Nhúng
+**Date:** October 17, 2026  
+**Course:** Embedded Linux Systems  
+**Topic:** Kernel Debugging & Embedded Application Performance Analysis
 
 ---
 
-## 1. Tổng quan dự án
+## 1. Project Overview
 
-LAB-03 tập trung vào việc xây dựng và kiểm thử một môi trường Embedded Linux nhằm phát hiện lỗi chương trình, phân tích sử dụng bộ nhớ, đánh giá hiệu năng và đo độ trễ đáp ứng của hệ điều hành.
+LAB-03 focuses on building and testing an Embedded Linux environment to identify programming errors, analyze memory usage, evaluate application performance, and measure operating system scheduling latency.
 
-Hệ thống được triển khai trên hai môi trường:
+The system is deployed in two environments:
 
-- **Host:** AlmaLinux 9.8, kiến trúc x86_64.
-- **Target:** Linux ARMv7-A, giả lập bằng QEMU với bo mạch `vexpress-a9` và CPU Cortex-A9.
+- **Host:** AlmaLinux 9.8, x86_64 architecture.
+- **Target:** ARMv7-A Linux, emulated using QEMU with the `vexpress-a9` machine and ARM Cortex-A9 CPU.
 
-Các ứng dụng được phát triển bằng ngôn ngữ C, biên dịch cho cả x86_64 và ARM tùy mục đích kiểm thử.
+Applications are developed in C and compiled for either x86_64 or ARM, depending on the testing requirements.
 
-Dự án gồm bốn nhóm chức năng chính:
+The project consists of four main components:
 
-1. **Remote Debugging:** Sử dụng GDB và gdbserver để phát hiện lỗi trong chương trình ARM.
-2. **Memory Analysis:** Dùng Valgrind phát hiện và khắc phục memory leak.
-3. **Performance Profiling:** Phân tích system call, CPU hotspot và hardware performance counters.
-4. **Real-Time Analysis:** Đo scheduling latency của Linux trong điều kiện bình thường và khi hệ thống chịu tải.
+1. **Remote Debugging:** Using GDB and gdbserver to identify programming errors in ARM applications.
+2. **Memory Analysis:** Using Valgrind to detect and fix memory leaks.
+3. **Performance Profiling:** Analyzing system calls, CPU hotspots, and hardware performance counters.
+4. **Real-Time Analysis:** Measuring Linux scheduling latency under normal and stressed system conditions.
 
-Toàn bộ kết quả được lưu thành source code, executable, log, biểu đồ và báo cáo PDF nhằm phục vụ việc kiểm tra, đánh giá và tái hiện thí nghiệm.
+All results are organized into source code, executables, log files, charts, and PDF reports to support verification, evaluation, and experiment reproducibility.
 
 ---
 
-## 2. Kiến trúc hệ thống
+## 2. System Architecture
 
-### 2.1. Mô hình Host–Target
+### 2.1. Host–Target Model
 
-Hệ thống được tổ chức theo kiến trúc Host–Target.
+The system follows a Host–Target architecture.
 
 ```text
                  ALMALINUX HOST (x86_64)
 +------------------------------------------------------+
 |                                                      |
-|  Source Code C                                       |
+|  C Source Code                                       |
 |       |                                              |
 |       +--> GCC x86_64                                |
 |       |       |                                      |
@@ -86,31 +87,31 @@ Hệ thống được tổ chức theo kiến trúc Host–Target.
 +------------------------------------------------------+
 ```
 
-### 2.2. Vai trò của từng môi trường
+### 2.2. Roles of Each Environment
 
 **AlmaLinux Host**
 
-Host đảm nhiệm việc phát triển, biên dịch, điều khiển quá trình debugging và phân tích hiệu năng.
+The Host is responsible for application development, compilation, remote debugging control, and performance analysis.
 
-Các công cụ chính:
+Main tools:
 
-- `gcc`: Biên dịch ứng dụng x86_64.
-- ARM cross-compiler: Biên dịch chương trình cho ARM.
-- `gdb`: Debug ứng dụng ARM từ xa.
-- `valgrind`: Phát hiện memory leak.
-- `strace`: Thống kê lời gọi hệ thống.
-- `perf`: Phân tích hiệu năng CPU.
-- `cyclictest`: Đo scheduling latency.
-- `stress-ng`: Tạo tải CPU, I/O và bộ nhớ.
-- `gnuplot`: Tạo biểu đồ latency.
+- `gcc`: Compiles x86_64 applications.
+- ARM cross-compiler: Compiles applications for ARM.
+- `gdb`: Remotely debugs ARM applications.
+- `valgrind`: Detects memory leaks.
+- `strace`: Collects and analyzes system call statistics.
+- `perf`: Profiles CPU performance.
+- `cyclictest`: Measures scheduling latency.
+- `stress-ng`: Generates CPU, I/O, and memory workloads.
+- `gnuplot`: Generates latency charts.
 
 **QEMU ARM Target**
 
-Target giả lập môi trường Embedded Linux ARM, chạy các executable ARM và cung cấp thông tin về hoạt động của chương trình.
+The Target emulates an ARM Embedded Linux environment, executes ARM binaries, and provides runtime information about application behavior.
 
-Cấu hình sử dụng:
+System configuration:
 
-| Thành phần | Cấu hình |
+| Component | Configuration |
 |---|---|
 | Machine | QEMU `vexpress-a9` |
 | CPU | ARM Cortex-A9 |
@@ -122,13 +123,13 @@ Cấu hình sử dụng:
 | Profiling | ARM strace |
 | Console | UART PL011 |
 
-Trong phần Remote Debugging, GDB trên Host giao tiếp với gdbserver qua UART ảo được chuyển tiếp sang TCP `127.0.0.1:1234`.
+For Remote Debugging, GDB on the Host communicates with gdbserver through a virtual UART connection forwarded to TCP `127.0.0.1:1234`.
 
-Phần Real-Time Latency được đo trực tiếp trên Host để tránh sai lệch do QEMU mô phỏng.
+Real-Time Latency measurements are performed directly on the Host to avoid timing distortions introduced by QEMU emulation.
 
 ---
 
-## 3. Cấu trúc thư mục dự án
+## 3. Project Directory Structure
 
 ```text
 Lab03/
@@ -199,236 +200,237 @@ Lab03/
     |-- Lab03_Report.pdf
 ```
 
-### 3.1. Thư mục `apps/`
+### 3.1. `apps/` Directory
 
-Chứa toàn bộ mã nguồn và các chương trình đã biên dịch.
+This directory contains all source files and compiled executables.
 
-| File | Chức năng |
+| File | Description |
 |---|---|
-| `buggy_app.c` | Chương trình chứa ba lỗi cố ý để thực hành GDB |
-| `buggy_app` | Executable ARM phục vụ Remote Debugging |
-| `leaky_app.c` | Source gốc chứa memory leak |
-| `leaky_app_buggy.c` | Bản lưu source trước khi sửa |
-| `leaky_app` | Executable x86_64 chưa sửa |
-| `leaky_app_fixed.c` | Source đã bổ sung giải phóng bộ nhớ |
-| `leaky_app_fixed` | Executable x86_64 đã sửa |
-| `leaky_app_arm` | Executable ARM của chương trình gốc |
-| `leaky_app_arm_probe.c` | Source có checkpoint để đo bộ nhớ ARM |
-| `leaky_app_arm_probe` | Executable ARM có checkpoint |
-| `measure_leaky_arm.sh` | Script thu thập VmRSS, VmSize và memory map |
-| `perf_target.c` | Chương trình tạo workload CPU và I/O |
-| `perf_target` | Executable x86_64 gốc |
-| `perf_target_profile.c` | Phiên bản tăng thời gian tính toán để profiling |
-| `perf_target_profile` | Executable sử dụng trong perf |
-| `perf_target_arm` | Executable ARM phục vụ so sánh system call |
+| `buggy_app.c` | C application containing three intentional programming errors for GDB practice |
+| `buggy_app` | ARM executable used for Remote Debugging |
+| `leaky_app.c` | Original source code containing memory leaks |
+| `leaky_app_buggy.c` | Backup of the original source code before modification |
+| `leaky_app` | Original x86_64 executable with memory leaks |
+| `leaky_app_fixed.c` | Modified source code with proper memory deallocation |
+| `leaky_app_fixed` | Fixed x86_64 executable |
+| `leaky_app_arm` | ARM executable of the original application |
+| `leaky_app_arm_probe.c` | Source code containing checkpoints for ARM memory measurements |
+| `leaky_app_arm_probe` | ARM executable with memory measurement checkpoints |
+| `measure_leaky_arm.sh` | Script for collecting VmRSS, VmSize, and memory mapping information |
+| `perf_target.c` | Application generating CPU-intensive and I/O workloads |
+| `perf_target` | Original x86_64 executable |
+| `perf_target_profile.c` | Modified application with an extended computational workload for profiling |
+| `perf_target_profile` | Executable used for performance profiling |
+| `perf_target_arm` | ARM executable used for system call analysis |
 
-### 3.2. Thư mục `output/`
+### 3.2. `output/` Directory
 
-Chứa image root filesystem của hệ thống ARM.
+This directory contains the ARM root filesystem image.
 
 **`initramfs_lab3.cpio.gz`**
 
-Đây là filesystem được nạp khi QEMU khởi động, chứa BusyBox, các chương trình thực hành và công cụ debug dành cho ARM.
+This filesystem is loaded during QEMU startup and contains BusyBox, ARM applications, and debugging tools.
 
-Image được sử dụng cùng Linux kernel và Device Tree đã xây dựng từ LAB-01.
+The image is used together with the Linux kernel and Device Tree generated in LAB-01.
 
-### 3.3. Thư mục `logs/`
+### 3.3. `logs/` Directory
 
-Chứa toàn bộ dữ liệu chứng minh kết quả thực nghiệm.
+This directory stores the experimental evidence and measurement results.
 
-Nhóm GDB lưu breakpoint, backtrace, thanh ghi và giá trị biến.
+- **GDB logs:** Store breakpoints, backtraces, register values, and variable inspection results.
+- **Valgrind logs:** Record memory allocation errors before and after fixing the source code.
+- **strace/perf logs:** Contain system call statistics, CPU hotspots, and performance counter measurements.
+- **cyclictest/stress-ng logs:** Store scheduling latency results, histograms, and experimental configurations.
 
-Nhóm Valgrind lưu kết quả phát hiện lỗi cấp phát bộ nhớ trước và sau khi sửa.
+The original log files are preserved to ensure that the reported results can be traced back to their experimental evidence.
 
-Nhóm strace/perf lưu các system call, CPU hotspot và performance counters.
+### 3.4. `report/` Directory
 
-Nhóm cyclictest/stress-ng lưu độ trễ lập lịch, histogram và các điều kiện đo.
-
-Các file log được giữ để có thể truy vết kết quả trong báo cáo về dữ liệu gốc.
-
-### 3.4. Thư mục `report/`
-
-Chứa báo cáo PDF chính thức:
+This directory contains the official PDF report:
 
 `Lab03_Report.pdf`
 
-Báo cáo trình bày phương pháp, kết quả, phân tích kỹ thuật và các câu hỏi của đề LAB-03.
+The report presents the experimental methodology, results, technical analysis, and answers to the LAB-03 assignment questions.
 
 ---
 
-## 4. Nội dung triển khai
+## 4. Implementation and Experimental Results
 
-### 4.1. Part A — Remote Debugging với GDB
+### 4.1. Part A — Remote Debugging with GDB
 
-**Mục tiêu**
+**Objective**
 
-Thiết lập kết nối debugging từ Host x86_64 đến chương trình chạy trên ARM QEMU, từ đó xác định nguyên nhân của ba lỗi C.
+Establish a remote debugging connection from the x86_64 Host to an application running on ARM QEMU and identify the causes of three C programming errors.
 
-**Công cụ**
+**Tools**
 
-- GDB trên Host.
-- gdbserver trên ARM.
+- GDB on the Host.
+- gdbserver on ARM.
 - QEMU ARMv7.
 - UART-to-TCP forwarding.
 
-**Các lỗi được kiểm tra**
+**Investigated Errors**
 
-| Lỗi | Nguyên nhân | Bằng chứng |
+| Error | Cause | Evidence |
 |---|---|---|
-| Array Out-of-Bounds | Vòng lặp dùng `i <= len` | `i = 5`, `len = 5` |
-| Use-After-Free | Sử dụng con trỏ sau `free()` | Con trỏ `0x8dda8` vẫn được trả về |
-| Integer Overflow | Phép nhân vượt phạm vi signed 32-bit integer | Giá trị quan sát `1.410.065.408` |
+| Array Out-of-Bounds | Loop condition uses `i <= len` | `i = 5`, `len = 5` |
+| Use-After-Free | A pointer is used after `free()` | Pointer `0x8dda8` is still returned |
+| Integer Overflow | Multiplication exceeds the range of a signed 32-bit integer | Observed value: `1,410,065,408` |
 
-Trong lỗi integer overflow, phép tính:
+For the integer overflow case, the mathematical operation:
 
 `100000 × 100000 = 10000000000`
 
-vượt quá phạm vi biểu diễn của kiểu `int` 32-bit.
+exceeds the representable range of a signed 32-bit `int`.
 
-Quá trình debugging sử dụng breakpoint, `print`, `backtrace` và `info registers`.
+The debugging process uses breakpoints, `print`, `backtrace`, and `info registers` to inspect program execution.
 
-**Kết quả**
+**Results**
 
-Xác định được ba lỗi và vị trí liên quan trong source. Các lỗi được phân tích tại breakpoint; không kết luận rằng cả ba đều gây crash.
+All three programming errors and their associated source locations were identified.
 
-**Bằng chứng:** `logs/gdb_session.txt`.
+The errors were analyzed using GDB breakpoints and runtime inspection. The results do not imply that all three errors necessarily caused application crashes.
+
+**Evidence:** `logs/gdb_session.txt`.
 
 ---
 
-### 4.2. Part B — Memory Analysis với Valgrind
+### 4.2. Part B — Memory Analysis with Valgrind
 
-**Mục tiêu**
+**Objective**
 
-Phát hiện memory leak, sửa source code và xác nhận chương trình không còn leak khi kết thúc.
+Detect memory leaks, modify the source code to fix them, and verify that no memory leaks remain at program termination in the tested execution.
 
-**Quy trình**
+**Procedure**
 
-1. Chạy `leaky_app` chưa sửa bằng Valgrind.
-2. Phân tích allocation stack trace.
-3. Xác định các vùng cấp phát chưa được giải phóng.
-4. Bổ sung `free()` vào vị trí phù hợp.
-5. Chạy Valgrind lại trên executable đã sửa.
-6. Cross-compile và quan sát bộ nhớ tiến trình ARM.
+1. Execute the original `leaky_app` using Valgrind.
+2. Analyze allocation stack traces.
+3. Identify dynamically allocated memory blocks that were not released.
+4. Add the necessary `free()` calls at appropriate locations.
+5. Run Valgrind again on the corrected executable.
+6. Cross-compile the application and inspect its memory usage on ARM.
 
-**Kết quả Valgrind**
+**Valgrind Results**
 
-| Metric | Trước sửa | Sau sửa |
+| Metric | Before Fix | After Fix |
 |---|---:|---:|
-| Definitely lost | 16.900 bytes | 0 bytes |
+| Definitely lost | 16,900 bytes | 0 bytes |
 | Lost blocks | 250 | 0 |
 | Allocations | 352 | 352 |
 | Frees | 102 | 352 |
 | Error contexts | 3 | 0 |
 
-Các vùng leak được xác định gồm:
+The detected memory leaks were associated with:
 
-- Bộ nhớ lưu tên: 2.100 bytes.
-- Bộ nhớ lưu điểm số: 2.000 bytes.
-- Bộ nhớ xử lý messages: 12.800 bytes.
+- Name storage: 2,100 bytes.
+- Score storage: 2,000 bytes.
+- Message processing: 12,800 bytes.
 
-Tổng memory leak được xác nhận:
+Total confirmed memory leak:
 
-**16.900 bytes**.
+**16,900 bytes**
 
-Sau khi sửa, Valgrind ghi nhận:
+After fixing the source code, Valgrind reported:
 
 `ERROR SUMMARY: 0 errors from 0 contexts`
 
-**Phân tích bộ nhớ trên ARM**
+**ARM Memory Analysis**
 
-Chương trình `leaky_app_arm_probe` được bổ sung hai checkpoint `SIGSTOP` để đọc bộ nhớ tiến trình trước và sau xử lý.
+The `leaky_app_arm_probe` application includes two `SIGSTOP` checkpoints to capture process memory information before and after processing.
 
-| Metric | Trước xử lý | Sau xử lý |
+| Metric | Before Processing | After Processing |
 |---|---:|---:|
 | VmSize | 776 KB | 776 KB |
 | VmRSS | 4 KB | 4 KB |
 | VmData | 152 KB | 152 KB |
 
-Việc VmRSS không thay đổi trong hai snapshot không chứng minh chương trình không bị leak, vì bộ nhớ có thể được cấp phát trong vùng heap đã tồn tại.
+The unchanged VmRSS values across the two snapshots do not prove the absence of memory leaks because additional allocations may occur within already allocated heap regions.
 
-Bằng chứng xác định và khắc phục memory leak được lấy từ Valgrind.
+Valgrind provides the primary evidence for identifying and fixing the memory leaks.
 
-**Bằng chứng:** `valgrind_report.txt`, `valgrind_fixed.txt`, `b3_qemu_console.log`.
+**Evidence:** `valgrind_report.txt`, `valgrind_fixed.txt`, `b3_qemu_console.log`.
 
 ---
 
 ### 4.3. Part C — Performance Profiling
 
-**Mục tiêu**
+**Objective**
 
-Đánh giá hiệu năng ứng dụng ở hai góc độ:
+Evaluate application performance from two perspectives:
 
-- System calls và chi phí tương tác với kernel.
-- CPU hotspots và mức sử dụng tài nguyên xử lý.
+- System calls and the overhead of interacting with the kernel.
+- CPU hotspots and computational resource utilization.
 
 **Workload**
 
-Chương trình `perf_target` tạo ra ba nhóm tác vụ:
+The `perf_target` application performs three main types of operations:
 
-1. CPU-intensive computation thông qua `sqrt()` và `log()`.
-2. Linear search trên mảng dữ liệu.
-3. File I/O bằng cách ghi 10.000 dòng.
+1. CPU-intensive computations using `sqrt()` and `log()`.
+2. Linear searches over data arrays.
+3. File I/O operations that write 10,000 lines.
 
-**Kết quả strace trên x86_64**
+**strace Results on x86_64**
 
-| System call | Calls | % syscall time |
+| System Call | Calls | % Syscall Time |
 |---|---:|---:|
-| write | 70 | 30,10% |
-| execve | 1 | 20,23% |
-| munmap | 3 | 12,85% |
-| close | 4 | 12,35% |
-| mmap | 14 | 9,45% |
+| write | 70 | 30.10% |
+| execve | 1 | 20.23% |
+| munmap | 3 | 12.85% |
+| close | 4 | 12.35% |
+| mmap | 14 | 9.45% |
 
-Tổng số system call: **122**.
+Total system calls: **122**
 
-Tổng thời gian syscall được đo: **1,206 ms**.
+Total measured syscall time: **1.206 ms**
 
-**Kết quả perf**
+**perf Results**
 
-Để tăng số lượng mẫu CPU, phiên bản `perf_target_profile` sử dụng 3.000 vòng tính toán thay vì 50 vòng trong chương trình gốc.
+To increase the number of collected CPU samples, `perf_target_profile` executes 3,000 computational iterations instead of the 50 iterations used in the original application.
 
-| Metric | Kết quả |
+| Metric | Result |
 |---|---:|
 | CPU samples | 395 |
 | Lost samples | 0 |
-| heavy_compute overhead | 51,39% |
-| Elapsed time | 1,9806 giây |
-| CPU cycles | 4.841.444.106 |
-| Instructions | 21.608.569.672 |
-| IPC | 4,46 |
-| Cache misses | 488.237 |
-| Branch misses | 13.534 |
+| heavy_compute overhead | 51.39% |
+| Elapsed time | 1.9806 seconds |
+| CPU cycles | 4,841,444,106 |
+| Instructions | 21,608,569,672 |
+| IPC | 4.46 |
+| Cache misses | 488,237 |
+| Branch misses | 13,534 |
 
-`heavy_compute()` là CPU hotspot lớn nhất được xác định trong phép đo.
+The `heavy_compute()` function was identified as the largest CPU hotspot in the profiling experiment.
 
-Ngoài ra, nhiều mẫu CPU xuất hiện trong `libm.so.6`, phù hợp với workload sử dụng các phép toán `sqrt()` và `log()`.
+A significant number of CPU samples were also associated with `libm.so.6`, consistent with the workload's use of mathematical functions such as `sqrt()` and `log()`.
 
-**Profiling trên ARM QEMU**
+**Profiling on ARM QEMU**
 
-| Metric | Kết quả |
+| Metric | Result |
 |---|---:|
 | Architecture | ARMv7 |
-| Execution time | 33,68 giây |
+| Execution time | 33.68 seconds |
 | Total system calls | 100 |
-| Total syscall time | 17,364 ms |
+| Total syscall time | 17.364 ms |
 
-Các phép đo x86_64 và ARM sử dụng kiến trúc cùng môi trường thực thi khác nhau. QEMU cũng tạo thêm overhead mô phỏng, nên không thể xem thời gian trên ARM QEMU là hiệu năng của CPU Cortex-A9 vật lý.
+The x86_64 and ARM measurements were performed on different architectures and execution environments.
 
-Bản profiling 3.000 vòng cũng không được dùng để so sánh trực tiếp với bản ARM 50 vòng.
+QEMU introduces emulation overhead, so the ARM QEMU execution time should not be interpreted as the actual performance of a physical Cortex-A9 processor.
 
-**Bằng chứng:** `strace_summary.txt`, `perf_report.txt`, `perf_stat.txt`, `c3_qemu_console.log`.
+Additionally, the 3,000-iteration profiling workload must not be directly compared with the 50-iteration ARM workload.
+
+**Evidence:** `strace_summary.txt`, `perf_report.txt`, `perf_stat.txt`, `c3_qemu_console.log`.
 
 ---
 
 ### 4.4. Part D — Real-Time Latency Analysis
 
-**Mục tiêu**
+**Objective**
 
-Đánh giá độ trễ đánh thức và lập lịch thread của Linux trong điều kiện bình thường và khi hệ thống chịu tải.
+Evaluate Linux thread wake-up and scheduling latency under normal system conditions and under additional computational load.
 
-Phép đo được thực hiện trên Host AlmaLinux, không chạy trong QEMU.
+The measurements were performed directly on the AlmaLinux Host rather than inside QEMU.
 
-**Cấu hình cyclictest**
+**cyclictest Configuration**
 
 | Parameter | Value |
 |---|---|
@@ -437,11 +439,11 @@ Phép đo được thực hiện trên Host AlmaLinux, không chạy trong QEMU.
 | Scheduling policy | SCHED_FIFO |
 | Priority | 80 |
 | Interval | 1000 µs |
-| Loops | 10.000 mỗi thread |
+| Loops | 10,000 per thread |
 | Memory locking | Enabled |
 | Histogram limit | 5000 µs |
 
-**Kết quả Baseline**
+**Baseline Results**
 
 | Thread | Min (µs) | Avg (µs) | Max (µs) |
 |---|---:|---:|---:|
@@ -450,52 +452,56 @@ Phép đo được thực hiện trên Host AlmaLinux, không chạy trong QEMU.
 | 2 | 8 | 15 | 142 |
 | 3 | 7 | 13 | 188 |
 
-Max latency lớn nhất: **188 µs**.
+Maximum observed latency: **188 µs**
 
-Không ghi nhận mẫu nào vượt 500 µs trong 40.000 mẫu.
+No samples exceeded 500 µs among the 40,000 recorded samples.
 
-**Kết quả khi có tải stress-ng**
+**Results Under stress-ng Load**
 
-Workload gồm 16 CPU workers, 4 I/O workers và 2 memory workers.
+The stress workload consisted of:
+
+- 16 CPU workers.
+- 4 I/O workers.
+- 2 memory workers.
 
 | Thread | Min (µs) | Avg (µs) | Max (µs) |
 |---|---:|---:|---:|
-| 0 | 6 | 12 | 2.042 |
-| 1 | 4 | 10 | 1.121 |
+| 0 | 6 | 12 | 2,042 |
+| 1 | 4 | 10 | 1,121 |
 | 2 | 4 | 10 | 964 |
-| 3 | 6 | 19 | 3.919 |
+| 3 | 6 | 19 | 3,919 |
 
-Max latency lớn nhất: **3.919 µs**.
+Maximum observed latency: **3,919 µs**
 
-Histogram ghi nhận **42 mẫu vượt 500 µs** trên tổng số 39.968 mẫu được thống kê.
+The histogram recorded **42 samples exceeding 500 µs** out of 39,968 recorded samples.
 
-**So sánh**
+**Comparison**
 
 | Metric | Baseline | Under Stress |
 |---|---:|---:|
-| Maximum latency | 188 µs | 3.919 µs |
+| Maximum latency | 188 µs | 3,919 µs |
 | Samples over 500 µs | 0 | 42 |
-| Deadline 500 µs | Đạt trong phép đo | Không đạt trong phép đo |
+| 500 µs deadline | Met during the test | Not met during the test |
 
-**Đánh giá**
+**Analysis**
 
-Kết quả cho thấy độ trễ trung bình thấp không đồng nghĩa hệ thống luôn đáp ứng deadline.
+The results demonstrate that low average scheduling latency does not guarantee that a system will always meet its timing deadlines.
 
-Khi có tải, các latency spike có thể làm hệ thống phản hồi muộn hơn thời điểm yêu cầu.
+Under heavy system load, occasional latency spikes can delay task execution beyond the required response time.
 
-Đối với một hệ thống điều khiển robot có deadline nghiêm ngặt dưới 500 µs, cần cân nhắc PREEMPT_RT cùng các biện pháp cấu hình và kiểm thử bổ sung.
+For a robotic control system with a strict deadline below 500 µs, PREEMPT_RT and additional real-time system configuration and testing should be considered.
 
-Dự án chỉ đo trực tiếp trên kernel `PREEMPT_DYNAMIC`. PREEMPT_RT được thảo luận về mặt lý thuyết và chưa có kết quả thực nghiệm riêng.
+However, this project only performed direct measurements using a `PREEMPT_DYNAMIC` kernel. PREEMPT_RT was discussed theoretically and was not separately evaluated through experiments.
 
-**Biểu đồ:** `logs/latency_histogram.png`.
+**Chart:** `logs/latency_histogram.png`.
 
 ---
 
-## 5. Hướng dẫn chạy lại
+## 5. Reproduction Instructions
 
-Các ví dụ dưới đây giả định người dùng đang đứng trong thư mục gốc của bài LAB-03 sau khi giải nén.
+The following commands assume that the user is working from the root directory of the extracted LAB-03 project.
 
-### 5.1. Chạy Memory Leak Test
+### 5.1. Run the Memory Leak Test
 
 ```bash
 ./apps/leaky_app
@@ -505,7 +511,7 @@ valgrind --leak-check=full \
   ./apps/leaky_app
 ```
 
-Sau khi sửa:
+After fixing the memory leaks:
 
 ```bash
 valgrind --leak-check=full \
@@ -513,13 +519,13 @@ valgrind --leak-check=full \
   ./apps/leaky_app_fixed
 ```
 
-### 5.2. Chạy strace trên Host
+### 5.2. Run strace on the Host
 
 ```bash
 strace -c ./apps/perf_target
 ```
 
-### 5.3. Chạy perf record/report
+### 5.3. Run perf record/report
 
 ```bash
 perf record -g \
@@ -529,13 +535,13 @@ perf record -g \
   -- ./apps/perf_target_profile
 ```
 
-Xem kết quả:
+View the profiling report:
 
 ```bash
 perf report --stdio
 ```
 
-### 5.4. Chạy perf stat
+### 5.4. Run perf stat
 
 ```bash
 perf stat \
@@ -543,9 +549,9 @@ perf stat \
   -- ./apps/perf_target_profile
 ```
 
-### 5.5. Khởi động ARM QEMU
+### 5.5. Boot ARM QEMU
 
-Cần chuẩn bị kernel và DTB từ LAB-01.
+The Linux kernel and DTB generated in LAB-01 must be available.
 
 ```bash
 qemu-system-arm \
@@ -563,19 +569,19 @@ qemu-system-arm \
   -append 'console=ttyAMA0,115200 rdinit=/sbin/init mem=512M'
 ```
 
-Trong ARM QEMU:
+Inside ARM QEMU:
 
 ```bash
 /usr/bin/measure_leaky_arm.sh
 ```
 
-Phân tích system call:
+Analyze system calls:
 
 ```bash
 /usr/bin/strace -c /usr/bin/perf_target_arm
 ```
 
-### 5.6. Chạy cyclictest trên Host
+### 5.6. Run cyclictest on the Host
 
 ```bash
 sudo /usr/bin/cyclictest \
@@ -591,45 +597,53 @@ sudo /usr/bin/cyclictest \
   --quiet
 ```
 
-Lưu ý: Không chạy lệnh này trong ARM QEMU. Kết quả đo lại có thể khác kết quả gốc tùy trạng thái hệ thống và tải CPU.
+**Note:** This command should not be executed inside ARM QEMU.
+
+Repeated measurements may produce different results depending on the system state, CPU load, and scheduling conditions.
 
 ---
 
-## 6. Các vấn đề kỹ thuật và giới hạn
+## 6. Technical Issues and Limitations
 
 ### 6.1. GDB Remote Connection
 
-QEMU sử dụng không hỗ trợ SLIRP user networking. Vì vậy, kết nối GDB được thực hiện bằng UART-to-TCP thay cho mạng IP bên trong máy ảo.
+The QEMU build used in this project does not support SLIRP user-mode networking.
+
+Therefore, the remote GDB connection was established through UART-to-TCP forwarding instead of an IP network connection inside the virtual machine.
 
 ### 6.2. Memory Leak Detection
 
-VmRSS không phải công cụ xác định memory leak trực tiếp. Valgrind được sử dụng để xác minh các allocation không được giải phóng.
+VmRSS is not a direct memory leak detection mechanism.
+
+Valgrind was used to identify dynamically allocated memory blocks that were not properly released.
 
 ### 6.3. CPU Profiling
 
-`perf` thu thập các mẫu CPU theo phương pháp sampling. Phần trăm overhead không đồng nghĩa tuyệt đối với phần trăm tổng thời gian thực thi ứng dụng.
+`perf` collects CPU execution samples using statistical sampling.
 
-Phiên bản profiling kéo dài workload nhằm tăng độ tin cậy của kết quả thống kê.
+Therefore, a function's reported overhead percentage does not necessarily represent its exact percentage of total application execution time.
+
+The profiling version extends the computational workload to improve the reliability of the collected samples.
 
 ### 6.4. ARM Performance
 
-QEMU mô phỏng hệ thống ARM nên kết quả thời gian chịu ảnh hưởng từ overhead của trình giả lập và cấu hình Host.
+QEMU emulates an ARM system, so execution time measurements are affected by emulation overhead and the Host configuration.
 
-Để đánh giá hiệu năng Cortex-A9 thực tế, cần chạy thêm trên phần cứng ARM tương ứng.
+Accurate evaluation of physical Cortex-A9 performance would require additional experiments on corresponding ARM hardware.
 
 ### 6.5. Real-Time Constraints
 
-Kernel được kiểm thử là Linux `PREEMPT_DYNAMIC`, không phải PREEMPT_RT.
+The tested kernel uses `PREEMPT_DYNAMIC`, not PREEMPT_RT.
 
-Phép đo với số vòng giới hạn không đủ để bảo đảm deadline trong mọi điều kiện hoạt động.
+The limited number of test iterations is insufficient to guarantee that timing deadlines will always be met under all operating conditions.
 
-Histogram stress cũng chỉ ghi nhận 39.968 mẫu, được giữ nguyên theo dữ liệu thực tế.
+The stress-test histogram contains 39,968 recorded samples, and this value is preserved according to the original experimental data.
 
 ---
 
-## 7. Tài liệu và kết quả nộp bài
+## 7. Submission Files and Experimental Evidence
 
-**Báo cáo chính thức**
+**Official Report**
 
 `report/Lab03_Report.pdf`
 
@@ -659,22 +673,22 @@ Histogram stress cũng chỉ ghi nhận 39.968 mẫu, được giữ nguyên the
 
 ---
 
-## 8. Kết luận
+## 8. Conclusion
 
-LAB-03 đã triển khai và kiểm thử các công cụ quan trọng trong quá trình phát triển và phân tích ứng dụng Embedded Linux.
+LAB-03 successfully implemented and evaluated several essential tools for Embedded Linux application development, debugging, and performance analysis.
 
-Các kết quả chính bao gồm:
+The main achievements include:
 
-- Xác định ba lỗi lập trình C bằng GDB Remote Debugging.
-- Phát hiện 16.900 bytes memory leak và sửa để Valgrind ghi nhận 0 errors.
-- Xác định `heavy_compute()` là CPU hotspot lớn nhất trong workload profiling.
-- Thu thập và phân tích system calls trên cả x86_64 và ARM QEMU.
-- Đo scheduling latency trên Host và phát hiện các latency spike vượt deadline 500 µs khi hệ thống chịu tải.
-- Tạo đầy đủ log, histogram và báo cáo PDF để phục vụ đánh giá.
+- Identifying three C programming errors using GDB Remote Debugging.
+- Detecting 16,900 bytes of memory leaks and correcting the source code until Valgrind reported zero errors.
+- Identifying `heavy_compute()` as the largest CPU hotspot in the profiling workload.
+- Collecting and analyzing system calls on both x86_64 and ARM QEMU.
+- Measuring scheduling latency on the Host and observing latency spikes exceeding the 500 µs deadline under system stress.
+- Organizing experimental logs, histograms, and a PDF report to support verification and evaluation.
 
-Dự án giúp làm rõ sự khác biệt giữa lỗi logic chương trình, lỗi quản lý bộ nhớ, giới hạn hiệu năng CPU và độ trễ lập lịch trong hệ thống Embedded Linux.
+The project demonstrates the differences between programming logic errors, memory management problems, CPU performance limitations, and scheduling latency in Embedded Linux systems.
 
 ---
 
 **Embedded Linux Systems — LAB-03**  
-**17/10/2026**
+**October 17, 2026**
